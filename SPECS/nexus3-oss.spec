@@ -1,14 +1,15 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
-Name: nexus3
-Version: 3.5.0
+Name: nexus
+Version: 3.6.1
 Release: 02
 License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
-Source0: %{name}-%{version}-%{release}-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/%{name}-%{version}-%{release}-unix.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
 Requires(postun): /usr/sbin/userdel
+Requires: java-1.8.0-openjdk
 AutoReqProv: no
 
 %define __os_install_post %{nil}
@@ -43,7 +44,7 @@ sed -i -e 's/-Djava.io.tmpdir=.*/-Djava.io.tmpdir=\/var\/lib\/%{name}\/tmp\//' $
 mkdir -p $RPM_BUILD_ROOT/var/lib/%{name}
 
 # Patch user
-sed -i -e 's/#run_as_user=.*/run_as_user=nexus3/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/nexus.rc
+sed -i -e 's/#run_as_user=.*/run_as_user=%{name}/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/nexus.rc
 
 # patch logfiles
 mkdir -p $RPM_BUILD_ROOT/var/log/%{name}
