@@ -54,6 +54,9 @@ sed -i -e 's/<File>${karaf.data}\/log\/request.log<\/File>/<File>\/var\/log\/%{n
 %preun
 service %{name} stop
 
+%postun
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
