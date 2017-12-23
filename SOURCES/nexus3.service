@@ -1,0 +1,15 @@
+[Unit]
+Description=Sonatype Nexus Repository Manager
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/etc/rc.d/init.d/nexus3 start
+ExecStop=/etc/rc.d/init.d/nexus3 stop
+User=nexus3
+Restart=on-abort
+#Environment=INSTALL4J_JAVA_HOME=/foo/bar/jre8
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

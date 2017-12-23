@@ -6,12 +6,14 @@ License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
 Source0: %{name}-%{version}-%{release}-unix.tar.gz
+Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
 Requires(postun): /usr/sbin/userdel
 AutoReqProv: no
 
 %define __os_install_post %{nil}
+%define use_systemd (0%{?fedora} && 0%{?fedora} >= 18) || (0%{?rhel} && 0%{?rhel} >= 7) || (0%{?suse_version} && 0%{?suse_version} >=1210)
 
 %description
 A package repository
@@ -51,8 +53,31 @@ sed -i -e 's/karaf.bootstrap.log=.*/karaf.bootstrap.log=\/var\/log\/%{name}\/kar
 sed -i -e 's/<File>${karaf.data}\/log\/nexus.log<\/File>/<File>\/var\/log\/%{name}\/%{name}.log<\/File>/' $RPM_BUILD_ROOT/usr/share/%{name}/etc/logback/logback.xml
 sed -i -e 's/<File>${karaf.data}\/log\/request.log<\/File>/<File>\/var\/log\/%{name}\/request.log<\/File>/' $RPM_BUILD_ROOT/usr/share/%{name}/etc/logback/logback-access.xml
 
+%if %{use_systemd}
+%{__mkdir} -p %{buildroot}%{_unitdir}
+%{__install} -m644 %{SOURCE1} \
+    %{buildroot}%{_unitdir}/%{name}.service
+%endif
+
 %preun
-service %{name} stop
+%if %use_systemd
+    /usr/bin/systemctl --no-reload disable %{name}.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl stop %{name}.service >/dev/null 2>&1 ||:
+%else
+    /sbin/service %{name} stop > /dev/null 2>&1
+    /sbin/chkconfig --del %{name}
+%endif
+
+%postun
+rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+
+%post
+%if %use_systemd
+    /usr/bin/systemctl preset %{name}.service >/dev/null 2>&1 ||:
+%else
+    /sbin/chkconfig --add %{name}
+#   /sbin/chkconfig %{name} on
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,7 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(-,%{name},%{name}) /var/lib/%{name}
 %attr(-,%{name},%{name}) /var/log/%{name}
 %attr(-,%{name},%{name}) /usr/share/%{name}
-
+%if %{use_systemd}
+%{_unitdir}/%{name}.service
+%endif
 %changelog
 
 * Sat Dec 2 2017 Julio Gonzalez <git@juliogonzalez.es> - 3.6.0-02
