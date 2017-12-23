@@ -64,7 +64,6 @@ sed -i -e 's/<File>${karaf.data}\/log\/request.log<\/File>/<File>\/var\/log\/%{n
     /usr/bin/systemctl --no-reload disable %{name}.service >/dev/null 2>&1 || :
     /usr/bin/systemctl stop %{name}.service >/dev/null 2>&1 ||:
 %else
-service %{name} stop
     /sbin/service %{name} stop > /dev/null 2>&1
     /sbin/chkconfig --del %{name}
 %endif
