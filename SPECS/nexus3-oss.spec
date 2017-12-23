@@ -13,6 +13,7 @@ Requires(postun): /usr/sbin/userdel
 AutoReqProv: no
 
 %define __os_install_post %{nil}
+%define use_systemd (0%{?fedora} && 0%{?fedora} >= 18) || (0%{?rhel} && 0%{?rhel} >= 7) || (0%{?suse_version} && 0%{?suse_version} >=1210)
 
 %description
 A package repository
