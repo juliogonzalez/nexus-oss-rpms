@@ -91,7 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(-,%{name},%{name}) /var/lib/%{name}
 %attr(-,%{name},%{name}) /var/log/%{name}
 %attr(-,%{name},%{name}) /usr/share/%{name}
-
+%if %{use_systemd}
+%{_unitdir}/%{name}.service
+%endif
 %changelog
 
 * Sat Dec 2 2017 Julio Gonzalez <git@juliogonzalez.es> - 3.6.0-02
