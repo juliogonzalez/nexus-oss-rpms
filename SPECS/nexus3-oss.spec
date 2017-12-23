@@ -6,6 +6,7 @@ License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
 Source0: %{name}-%{version}-%{release}-unix.tar.gz
+Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
 Requires(postun): /usr/sbin/userdel
@@ -51,11 +52,32 @@ sed -i -e 's/karaf.bootstrap.log=.*/karaf.bootstrap.log=\/var\/log\/%{name}\/kar
 sed -i -e 's/<File>${karaf.data}\/log\/nexus.log<\/File>/<File>\/var\/log\/%{name}\/%{name}.log<\/File>/' $RPM_BUILD_ROOT/usr/share/%{name}/etc/logback/logback.xml
 sed -i -e 's/<File>${karaf.data}\/log\/request.log<\/File>/<File>\/var\/log\/%{name}\/request.log<\/File>/' $RPM_BUILD_ROOT/usr/share/%{name}/etc/logback/logback-access.xml
 
+%if %{use_systemd}
+%{__mkdir} -p %{buildroot}%{_unitdir}
+%{__install} -m644 %{SOURCE1} \
+    %{buildroot}%{_unitdir}/%{name}.service
+%endif
+
 %preun
+%if %use_systemd
+    /usr/bin/systemctl --no-reload disable %{name}.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl stop %{name}.service >/dev/null 2>&1 ||:
+%else
 service %{name} stop
+    /sbin/service %{name} stop > /dev/null 2>&1
+    /sbin/chkconfig --del %{name}
+%endif
 
 %postun
 rm -f $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+
+%post
+%if %use_systemd
+    /usr/bin/systemctl preset %{name}.service >/dev/null 2>&1 ||:
+%else
+    /sbin/chkconfig --add %{name}
+#   /sbin/chkconfig %{name} on
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
