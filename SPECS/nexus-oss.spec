@@ -12,7 +12,7 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus
 Version: 2.14.5.02
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -20,6 +20,7 @@ License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
 Source0: http://www.sonatype.org/downloads/%{name}-%{nversion}-bundle.tar.gz
+Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
 # As soon as we implement a systemd service, this ugly require can be removed
@@ -50,8 +51,11 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/share/%{name}
 mv * $RPM_BUILD_ROOT/usr/share/%{name}
 
+%if %use_systemd
+%else
 mkdir -p $RPM_BUILD_ROOT/etc/init.d/
 ln -sf /usr/share/%{name}/bin/nexus $RPM_BUILD_ROOT/etc/init.d/%{name}
+%endif
 
 mkdir -p $RPM_BUILD_ROOT/etc/
 ln -sf /usr/share/%{name}/conf $RPM_BUILD_ROOT/etc/%{name}
@@ -83,6 +87,12 @@ if [ "${JAVA_MAJOR_VERSION}" != "8" ]; then
   echo "to adjust the default version to be used"
 fi
 
+%if %{use_systemd}
+%{__mkdir} -p %{buildroot}%{_unitdir}
+%{__install} -m644 %{SOURCE1} \
+    %{buildroot}%{_unitdir}/%{name}.service
+%endif
+
 %post
 %if %use_systemd
 /usr/bin/systemctl daemon-reload
@@ -101,6 +111,8 @@ fi
 %postun
 %if %use_systemd
 /usr/bin/systemctl daemon-reload
+%else
+/sbin/chkconfig --add %{name}
 %endif
 
 %clean
@@ -109,12 +121,16 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc
-/etc/init.d/%{name}
 %attr(-,%{name},%{name}) /etc/%{name}
 %attr(-,%{name},%{name}) /var/lib/%{name}
 %attr(-,%{name},%{name}) /var/log/%{name}
 %attr(-,%{name},%{name}) /var/run/%{name}
 %attr(-,%{name},%{name}) /usr/share/%{name}
+%if %{use_systemd}
+%{_unitdir}/%{name}.service
+%else
+/etc/init.d/%{name}
+%endif
 
 %changelog
 * Thu Dec 28 2017 Julio Gonzalez <git@juliogonzalez.es> - 2.14.5.02-1

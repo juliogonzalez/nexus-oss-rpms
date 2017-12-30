@@ -12,7 +12,7 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus3
 Version: 3.6.2.01
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -102,8 +102,7 @@ fi
 
 %preun
 %if %use_systemd
-/usr/bin/systemctl --no-reload disable %{name}.service
-/usr/bin/systemctl stop %{name}.service
+/usr/bin/systemctl stop %{name}
 %else
 /etc/init.d/%{name} stop
 %{chkconfig_cmd} --del %{name}
