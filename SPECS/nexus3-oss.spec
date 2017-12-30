@@ -111,8 +111,6 @@ fi
 %postun
 %if %use_systemd
 /usr/bin/systemctl daemon-reload
-%else
-/sbin/chkconfig --add %{name}
 %endif
 
 %clean
