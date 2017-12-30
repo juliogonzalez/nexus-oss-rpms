@@ -20,6 +20,7 @@ License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
 Source0: http://download.sonatype.com/nexus/3/%{name}-%{nversion}-unix.tar.gz
+Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
 # As soon as we implement a systemd service, this ugly require can be removed
@@ -51,8 +52,11 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/%{name}
 mv * .install4j $RPM_BUILD_ROOT/usr/share/%{name}
 rm -rf $RPM_BUILD_ROOT/usr/share/%{name}/data
 
+%if %use_systemd
+%else
 mkdir -p $RPM_BUILD_ROOT/etc/init.d/
 ln -sf /usr/share/%{name}/bin/nexus $RPM_BUILD_ROOT/etc/init.d/%{name}
+%endif
 
 mkdir -p $RPM_BUILD_ROOT/etc/
 ln -sf /usr/share/%{name}/etc $RPM_BUILD_ROOT/etc/%{name}
@@ -83,6 +87,12 @@ if [ "${JAVA_MAJOR_VERSION}" != "8" ]; then
   echo "to adjust the default version to be used"
 fi
 
+%if %{use_systemd}
+%{__mkdir} -p %{buildroot}%{_unitdir}
+%{__install} -m644 %{SOURCE1} \
+    %{buildroot}%{_unitdir}/%{name}.service
+%endif
+
 %post
 %if %use_systemd
 /usr/bin/systemctl daemon-reload
@@ -92,7 +102,8 @@ fi
 
 %preun
 %if %use_systemd
-/usr/bin/systemctl stop %{name}
+/usr/bin/systemctl --no-reload disable %{name}.service
+/usr/bin/systemctl stop %{name}.service
 %else
 /etc/init.d/%{name} stop
 %{chkconfig_cmd} --del %{name}
@@ -101,6 +112,8 @@ fi
 %postun
 %if %use_systemd
 /usr/bin/systemctl daemon-reload
+%else
+/sbin/chkconfig --add %{name}
 %endif
 
 %clean
@@ -109,11 +122,15 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc
-/etc/init.d/%{name}
 %attr(-,%{name},%{name}) /etc/%{name}
 %attr(-,%{name},%{name}) /var/lib/%{name}
 %attr(-,%{name},%{name}) /var/log/%{name}
 %attr(-,%{name},%{name}) /usr/share/%{name}
+%if %{use_systemd}
+%{_unitdir}/%{name}.service
+%else
+/etc/init.d/%{name}
+%endif
 
 %changelog
 * Thu Dec 28 2017 Julio Gonzalez <git@juliogonzalez.es> - 3.6.2.01-1
