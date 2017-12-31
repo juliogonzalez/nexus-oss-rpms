@@ -52,7 +52,10 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/%{name}
 mv * .install4j $RPM_BUILD_ROOT/usr/share/%{name}
 rm -rf $RPM_BUILD_ROOT/usr/share/%{name}/data
 
-%if %use_systemd
+%if %{use_systemd}
+%{__mkdir} -p %{buildroot}%{_unitdir}
+%{__install} -m644 %{SOURCE1} \
+    %{buildroot}%{_unitdir}/%{name}.service
 %else
 mkdir -p $RPM_BUILD_ROOT/etc/init.d/
 ln -sf /usr/share/%{name}/bin/nexus $RPM_BUILD_ROOT/etc/init.d/%{name}
@@ -87,11 +90,7 @@ if [ "${JAVA_MAJOR_VERSION}" != "8" ]; then
   echo "to adjust the default version to be used"
 fi
 
-%if %{use_systemd}
-%{__mkdir} -p %{buildroot}%{_unitdir}
-%{__install} -m644 %{SOURCE1} \
-    %{buildroot}%{_unitdir}/%{name}.service
-%endif
+
 
 %post
 %if %use_systemd
