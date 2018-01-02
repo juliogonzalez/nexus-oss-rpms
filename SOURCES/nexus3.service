@@ -8,7 +8,6 @@ ExecStart=/usr/share/nexus3/bin/nexus start
 ExecStop=/usr/share/nexus3/bin/nexus stop
 User=nexus3
 Restart=on-abort
-#Environment=INSTALL4J_JAVA_HOME=/foo/bar/jre8
 LimitNOFILE=65536
 
 [Install]

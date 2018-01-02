@@ -128,6 +128,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Dec 30 2017 Anton Patsev <patsev.anton@gmail.com> - 3.6.2.01-2
+- Stop requiring sysvinit compatibility for systemd
+- Add systemd service
+
 * Thu Dec 28 2017 Julio Gonzalez <git@juliogonzalez.es> - 2.14.5.02-1
 - Start using Fedora/RHEL release conventions
 - Fix problems on RPM removals

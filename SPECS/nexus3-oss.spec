@@ -90,8 +90,6 @@ if [ "${JAVA_MAJOR_VERSION}" != "8" ]; then
   echo "to adjust the default version to be used"
 fi
 
-
-
 %post
 %if %use_systemd
 /usr/bin/systemctl daemon-reload
@@ -129,6 +127,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Dec 30 2017 Anton Patsev <patsev.anton@gmail.com> - 3.6.2.01-2
+- Stop requiring sysvinit compatibility for systemd
+- Add systemd service
+
 * Thu Dec 28 2017 Julio Gonzalez <git@juliogonzalez.es> - 3.6.2.01-1
 - Start using Fedora/RHEL release conventions
 - Fix problems on RPM removals
