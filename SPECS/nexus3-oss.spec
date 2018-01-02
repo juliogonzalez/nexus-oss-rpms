@@ -119,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Thu Dec 30 2017 Anton Patsev <patsev.anton@gmail.com> - 3.6.2.01-2
+* Sat Dec 30 2017 Anton Patsev <patsev.anton@gmail.com> - 3.6.2.01-2
 - Stop requiring sysvinit compatibility for systemd
 - Add systemd service
 
