@@ -54,7 +54,7 @@ done
 shift $((OPTIND-1))
 
 case ${VERSION} in
-  3) VERSION="3.6.2-01"
+  3) VERSION="3.7.0-04"
      URL="http://download.sonatype.com/nexus/3/nexus-${VERSION}-unix.tar.gz"
      TGZ="nexus3-${VERSION}-unix.tar.gz"
      SPECS='nexus3-oss.spec';;

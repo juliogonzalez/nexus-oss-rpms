@@ -11,8 +11,8 @@
 
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus3
-Version: 3.6.2.01
-Release: 2%{?dist}
+Version: 3.7.0.04
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -119,6 +119,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jan 02 2018 Julio Gonzalez <git@juliogonzalez.es> - 3.7.0-04-1
+- Update to Nexus 3.7.0-04
+- Warning: 3.7.0-04.1 is affected by issue 
+  https://issues.sonatype.org/browse/NEXUS-15278, it is highly recommended
+  you install 3.7.1-02-1 if you have offline repositories
+
 * Sat Dec 30 2017 Anton Patsev <patsev.anton@gmail.com> - 3.6.2.01-2
 - Stop requiring sysvinit compatibility for systemd
 - Add systemd service
