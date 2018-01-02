@@ -23,14 +23,6 @@ Source0: http://www.sonatype.org/downloads/%{name}-%{nversion}-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
-# As soon as we implement a systemd service, this ugly require can be removed
-%if %use_systemd
-%if (!0%{?is_opensuse} && 0%{?suse_version} >=1210) || (0%{?is_opensuse} && 0%{?sle_version} >= 120100)
-Requires: systemd-sysvinit
-%else
-Requires: systemd-sysv
-%endif
-%endif
 Requires: java >= 1.8.0
 AutoReqProv: no
 
