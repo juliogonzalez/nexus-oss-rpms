@@ -1,7 +1,3 @@
-# WARNING
-
-3.7.0-04.1 is affected by [NEXUS-15278](https://issues.sonatype.org/browse/NEXUS-15278), it is highly recommended you install 3.7.1-02-1 if you have offline repositories.
-
 # Requirements
 
 To build the RPM:
