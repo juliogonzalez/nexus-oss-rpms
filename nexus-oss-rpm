@@ -2,6 +2,11 @@
 
 SCRIPT=$(basename ${0})
 
+if ! rpm -qa | grep -qw rpm-build; then
+    echo "__________Dont installed 'rpm-build'__________"
+    #yum -y install rpm-build
+fi
+
 help() {
   echo ""
   echo "Script to build Sonatype Nexus OSS RPMs"
