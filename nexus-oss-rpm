@@ -39,8 +39,13 @@ function get_sources() {
 }
 
 function build_rpm() {
-  rpmbuild --quiet --define "_topdir `pwd`" -ba "SPECS/${1}"
+  rpmbuild --quiet --define "_topdir `pwd`" -ba "${1}"
   return ${?}
+}
+
+get_url_source_from_spec() {
+  local NAME=$(sed -rn 's/Name:\s*(.*)/\1/p' ${1})
+  echo $(sed -rn 's/Source0:\s*(.*)/\1/p' ${1}|sed -e "s/%{name}/${NAME}/g")
 }
 
 while getopts ":v:h" opts; do
@@ -55,23 +60,25 @@ done
 shift $((OPTIND-1))
 
 case ${VERSION} in
-  3) VERSION="3.13.0-01"
-     URL="http://download.sonatype.com/nexus/3/nexus-${VERSION}-unix.tar.gz"
-     TGZ="nexus-${VERSION}-unix.tar.gz"
-     SPECS='nexus3-oss.spec';;
-  2|'') VERSION="2.14.8-01"
-        URL="http://www.sonatype.org/downloads/nexus-${VERSION}-bundle.tar.gz"
-        TGZ="nexus-${VERSION}-bundle.tar.gz"
-        SPECS='nexus-oss.spec';;
+  3) SPEC='SPECS/nexus3-oss.spec'
+     URL="$(get_url_source_from_spec ${SPEC})"
+     TGZ="$(basename ${URL})";;
+  2|'') SPEC='SPECS/nexus-oss.spec'
+        URL="$(get_url_source_from_spec ${SPEC})"
+	TGZ="$(basename ${URL})";;
   *) echo "Invalid version. Use ${SCRIPT} -h"
      exit 1;;
 esac
 
+echo "### Creating build environment..."
 create_build_env
+echo "### Downloading sources..."
 get_sources ${URL} ${TGZ}
-build_rpm ${SPECS}
+echo "### Building RPMs..."
+build_rpm ${SPEC}
 if [ $? -eq 0 ]; then
-  echo Your packages are available at $PWD/RPMS.
+  echo "### Binary RPMs available at ${PWD}/RPMS"
+  echo "### Source RPMs available at ${PWD}/SRPMS"
   exit 0
 else
   echo There are errors. Check your log.
