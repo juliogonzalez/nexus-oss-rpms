@@ -13,7 +13,7 @@ Summary: Nexus manages software “artifacts” required for development, deploy
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 2.14.11.01
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -111,10 +111,16 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc
 %attr(-,%{name},%{name}) /etc/%{name}
+%config(noreplace) /usr/share/%{name}/conf/*
+%attr(-,%{name},%{name}) /usr/share/%{name}/bin
+%attr(-,%{name},%{name}) /usr/share/%{name}/lib
+%attr(-,%{name},%{name}) /usr/share/%{name}/logs
+%attr(-,%{name},%{name}) /usr/share/%{name}/nexus
+%attr(-,%{name},%{name}) /usr/share/%{name}/tmp
+%doc /usr/share/%{name}/*.txt
 %attr(-,%{name},%{name}) /var/lib/%{name}
 %attr(-,%{name},%{name}) /var/log/%{name}
 %attr(-,%{name},%{name}) /var/run/%{name}
-%attr(-,%{name},%{name}) /usr/share/%{name}
 %if %{use_systemd}
 %{_unitdir}/%{name}.service
 %else
@@ -122,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Jan 26 2019 Julio Gonzalez <packages@juliogonzalez.es> - 2.14.11.01-2
+- Do not replace modified config files
+
 * Fri Nov 23 2018 Julio Gonzalez <git@juliogonzalez.es> - 2.14.11.01-1
 - Update to 2.14.11-01
 - Require Java 1.8.0
