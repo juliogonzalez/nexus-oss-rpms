@@ -12,15 +12,15 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 2.14.11.01
-Release: 2%{?dist}
+Version: 2.14.12.02
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
-Source0: http://www.sonatype.org/downloads/%{name}-2.14.11-01-bundle.tar.gz
+Source0: http://www.sonatype.org/downloads/%{name}-2.14.12-02-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Mar 12 2019 Julio Gonzalez Giil <git@juliogonzalez.es> 2.14.12.02-1
+- Update to 2.14.12-02
+
 * Sat Jan 26 2019 Julio Gonzalez <packages@juliogonzalez.es> - 2.14.11.01-2
 - Do not replace modified config files
 
