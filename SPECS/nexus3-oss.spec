@@ -12,7 +12,7 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.17.0.01
+Version: 3.18.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -20,7 +20,7 @@ Release: 1%{?dist}
 License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.17.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.18.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -134,6 +134,23 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Aug 19 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.18.0.01-1
+- Update to Nexus 3.18.0-01
+- Bugfixes
+  * NEXUS-10252: "Invalid authentication ticket" error on password change
+  * NEXUS-14729: Regression: Nexus 3 returns 501, 400 and 204 responses for MKCOL requests
+  * NEXUS-15878: UI poll requests iterates over all privileges.
+  * NEXUS-19618: Expensive, error prone check done for content validation of checksums
+  * NEXUS-20014: browse operations can be slower than expected with many content selectors
+  * NEXUS-20104: OrientDB database backups default compression level and buffer size are not optimized
+  * NEXUS-20139: Repair - Rebuild repository search queries are not optimized, potentially impacting other search operations
+  * NEXUS-20360: request.log is no longer included in support zips
+  * NEXUS-20453: Browse operations can be very slow when using content selector permissions
+  * NEXUS-20479: Stored XSS Vulnerabilities (eventually public)
+- Improvements
+  * NEXUS-19954: Increase the default maximum heap and direct memory sizes
+  * NEXUS-20100: allow customizing compression level and buffer size of Orient database checkpoint during upgrade using system properties
+
 * Fri Aug 16 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.17.0.01-1
 - Update to Nexus 3.17.0-01
 - Password for admin user at new installations is now random and can be found
