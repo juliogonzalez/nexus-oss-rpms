@@ -12,7 +12,7 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.18.1.01
+Version: 3.19.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -20,7 +20,7 @@ Release: 1%{?dist}
 License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.18.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.19.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -134,6 +134,24 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 17 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.19.0.01-1
+- Update to Nexus 3.19.0-01
+- Bugfixes
+  * NEXUS-10679: NPM repos don't handle HEAD requests
+  * NEXUS-19102: Unable to proxy private Azure (ACR) registry
+- Improvements
+  * NEXUS-19970: CocoaPods Format Support
+  * NEXUS-19866: Conda Format Support
+  * NEXUS-9862: New abilities for adding and removing "distribution tags" into npm metadata via the npm CLI
+  * NEXUS-17797: S3 peerformance improvements, support for encrypted S3 buckets, use of custom encryption keys,
+                 simplified permission testing, and essential improvements to storage space metrics
+  * NEXUS-19120: Added support for Docker Foreign Layers. Nexus Repository Manager users can now proxy docker images
+                 with foreign layers when pulling Microsoft Windows images.
+  * NEXUS-19144, NEXUS-19142, NEXUS-19143, NEXUS-19145, NEXUS-19146, NEXUS-16734:  Enhanced REST API endpoints for
+                 initial provisioning and maintenance of Nexus Repository Manager
+  * NEXUS-20682: Go Format Data Integration
+  * NEXUS-19525: Multi-policy Cleanup
+
 * Tue Aug 20 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.18.1.01-1
 - Update to Nexus 3.18.1-01
 - Bugfixes
