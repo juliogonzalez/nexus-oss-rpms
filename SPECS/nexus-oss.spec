@@ -12,7 +12,7 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 2.14.14.01
+Version: 2.14.15.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -20,7 +20,7 @@ Release: 1%{?dist}
 License: AGPL
 Group: unknown
 URL: http://nexus.sonatype.org/
-Source0: http://www.sonatype.org/downloads/%{name}-2.14.14-01-bundle.tar.gz
+Source0: http://www.sonatype.org/downloads/%{name}-2.14.15-01-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -128,6 +128,14 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 17 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.15.01-1
+- Update to 2.14.15-01
+- Bugfixes
+  * NEXUS-21044: CVE-2019-15893: Remote Code Execution vulnerability
+  * NEXUS-21193: CVE-2019-16530: Remote Code Execution vulnerability
+  * NEXUS-20626: CVE-2019-5475: OS Command Injection vulnerability (second part to the fix in 2.14.14)
+  * NEXUS-21512: Update Apache Tika and Commons Compress libraries to resolve security vulnerabilities
+
 * Fri Aug 16 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.14.01-1
 - Update to 2.14.14-01
 
