@@ -9,7 +9,7 @@ This repository holds files and scripts to build Sonatype Nexus 2.x and 3.x RPM 
 
 # Licenses
 
-- Nexus OSS: AGPL, Sonatype
+- Nexus OSS: EPL-2.0, Sonatype
 - Scripts and Spec: AGPL, Jens Braeuer <braeuer.jens@googlemail.com>,
   Julio Gonzalez Gil <git@juliogonzalez.es>
 
