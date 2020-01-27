@@ -12,15 +12,15 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.19.1.01
+Version: 3.20.0.04
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
-License: AGPL
+License: EPL-2.0
 Group: unknown
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.19.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.20.0-04-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -134,6 +134,38 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jan 27 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.20.0.04-1
+- License for Nexus OSS is EPL-2.0 as stated at https://blog.sonatype.com/2012/06/nexus-oss-switched-to-the-eclipse-public-license-a-clarification-and-an-observation/
+  and it is since 2012. Mistake inherited from the original packages from Jens Braeuer.
+- Update to Nexus 3.20.0-04
+- Bugfixes
+  * NEXUS-21311 : Yum and CentOS 8
+  * NEXUS-21371: npm package metadata does not return correct status code sometimes
+  * NEXUS-19811: Offline and misconfigured blob store should be noted in UI
+  * NEXUS-21368: Proxy repository removes get-params from HTTP sources
+  * NEXUS-22144: Slow performance displaying content selectors in UI
+  * NEXUS-21306: Cannot proxy Docker repository on Bintray
+  * NEXUS-21315: Extremely slow processing in "Docker - Delete unused manifests and images" task
+  * NEXUS-21672: Group repo with proxy repo member to remote group repo responds 404 when remote group repo responds
+                 "403 Requested item is quarantined"
+  * NEXUS-18117: PyPI ignoring python_requires metadata
+  * NEXUS-20705: Index can contain absolute URLs which bypass Nexus Repository Manager
+  * NEXUS-21589: Repository health check can fail if the same asset exists in more than one repository
+  * NEXUS-14233: Support managing Realms via the REST API
+  * NEXUS-21138: Snapshot remover leaves maven-metadata.xml files deleted for a long time, breaking builds
+  * NEXUS-12488: Remote https repository with TLS client certificate loaded in NXRM JVM keystore not trusted
+  * NEXUS-20140: 500 Server Error shown in Chrome console when accessing Support Status page
+- Improvements
+  * NEXUS-20269: jetty-http-redirect-to-https.xml removed and its use discouraged
+                 Startup will fail if your configuration references jetty-http-redirect-to-https.xml
+                 Check https://support.sonatype.com/hc/en-us/articles/360037845633 if that is the case
+  * NEXUS-19424 : Ability to Clean Up by "Never downloaded"
+  * NEXUS-9837: R Format Support
+  * NEXUS-12456: Enhanced npm login for private repository usages
+  * NEXUS-13433: npm whoami support
+  * NEXUS-20268: HSTS enabled by default for Inbound Jetty HTTPS connectors
+                 See https://support.sonatype.com/hc/en-us/articles/360024943193
+
 * Thu Oct 17 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.19.1.01-1
 - Update to Nexus 3.19.1-01
 - Bugfixes
