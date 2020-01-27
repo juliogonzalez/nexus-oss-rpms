@@ -12,7 +12,7 @@
 Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.20.0.04
+Version: 3.20.1.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -20,7 +20,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: unknown
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.20.0-04-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.20.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -134,6 +134,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jan 27 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.20.1.01-1
+- Bugfixes:
+  * NEXUS-22249: An error may occur when starting NXRM Pro due to race condition around the license loading.
+  * NEXUS-22241: During the upgrade process from older releases (3.19.0 and before), NXRM may throw an exception
+                 when updating PyPI database configuration.
+
 * Mon Jan 27 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.20.0.04-1
 - License for Nexus OSS is EPL-2.0 as stated at https://blog.sonatype.com/2012/06/nexus-oss-switched-to-the-eclipse-public-license-a-clarification-and-an-observation/
   and it is since 2012. Mistake inherited from the original packages from Jens Braeuer.
