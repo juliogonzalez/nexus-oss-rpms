@@ -1,0 +1,19 @@
+# Nexus is supposed to be installed into a single directory, and I
+# prefer to avoid more complications changing anything than the
+# config files as I already do at the SPEC
+addFilter("non-etc-or-var-file-marked-as-conffile")
+addFilter("non-executable-script")
+addFilter("zero-length")
+# And we better don't play with fdupes, which is not even available by
+# Default at CentOS6 or CentOS7
+addFilter("files-duplicate")
+# This package creates a user and a group that are not declared,
+# at openSUSE and I don't intend to submit the package to openSUSE
+# so we can disable it
+addFilter("non-standard-uid")
+addFilter("non-standard-gid")
+# Fixing the following stuff would be on Sonatype side
+addFilter("hidden-file-or-dir")
+addFilter("class-path-in-manifest")
+addFilter("position-independent-executable-suggested")
+addFilter("shlib-with-non-pic-code")

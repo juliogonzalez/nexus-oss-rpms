@@ -2,33 +2,52 @@
 
 %if 0%{?suse_version}
 %define chkconfig_cmd /usr/bin/chkconfig
+%define java_package java-1_8_0-openjdk
 %else
 %define chkconfig_cmd /sbin/chkconfig
+%define java_package java-1.8.0-openjdk
 %endif
 
-# Use systemd for fedora >= 18, rhel >=7, SUSE >= 12 SP1 and openSUSE >= 42.1
-%define use_systemd (0%{?fedora} && 0%{?fedora} >= 18) || (0%{?rhel} && 0%{?rhel} >= 7) || (!0%{?is_opensuse} && 0%{?suse_version} >=1210) || (0%{?is_opensuse} && 0%{?sle_version} >= 120100)
+# Use systemd for SUSE >= 12 SP1 openSUSE >= 42.1, openSUSE Tumbleweed/Factory, fedora >= 18, rhel >=7 and Amazon Linux >= 2
+%if (!0%{?is_opensuse} && 0%{?suse_version} >=1210) || (0%{?is_opensuse} && 0%{?sle_version} >= 120100) || 0%{?suse_version} > 1500
+%define suse_systemd 1
+%endif
+%if (0%{?fedora} && 0%{?fedora} >= 18) || (0%{?rhel} && 0%{?rhel} >= 7) || 0%{?amzn} >= 2
+%define redhat_systemd 1
+%endif
+%if 0%{?suse_systemd} || 0%{?redhat_systemd}
+%define use_systemd 1
+%endif
 
-Summary: Nexus manages software “artifacts” required for development, deployment, and provisioning.
+Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 2.14.16.01
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
-Group: unknown
+Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
 Source0: http://www.sonatype.org/downloads/%{name}-2.14.16-01-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
-Requires: java >= 1.7.0
+Requires: %{java_package}
+%if 0%{?use_systemd}
+Requires: systemd
+%endif
 AutoReqProv: no
 
 %description
-A package repository
+Nexus manages software "artifacts" and repositories required for development,
+deployment, and provisioning.
+
+Among others, it can manage JAR or RPM artifactories inside mvn/ivy2 or yum
+repositories respectively
+
+Full sources are available at https://github.com/sonatype/nexus-public/archive/release-%{nversion}.tar.gz
 
 %prep
 %setup -q -n %{name}-%{nversion}
@@ -36,15 +55,14 @@ A package repository
 %build
 %define debug_package %{nil}
 
-%pre
-/usr/bin/getent passwd %{name} > /dev/null || /usr/sbin/useradd -r -d /var/lib/%{name} -U -s /bin/bash %{name}
-
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/share/%{name}
+# Remove all non GNU/Linux stuff
+rm -rf bin/jsw/windows* bin/jsw/solaris-* bin/jsw/lib/libwrapper-solaris-* bin/nexus.bat
 mv * $RPM_BUILD_ROOT/usr/share/%{name}
 
-%if %{use_systemd}
+%if 0%{?use_systemd}
 %{__mkdir} -p %{buildroot}%{_unitdir}
 %{__install} -m644 %{SOURCE1} \
     %{buildroot}%{_unitdir}/%{name}.service
@@ -57,51 +75,71 @@ mkdir -p $RPM_BUILD_ROOT/etc/
 ln -sf /usr/share/%{name}/conf $RPM_BUILD_ROOT/etc/%{name}
 
 # patch work dir
-sed -i -e 's/%{name}-work=.*/%{name}-work=\/var\/lib\/%{name}\//' $RPM_BUILD_ROOT/usr/share/%{name}/conf/nexus.properties
+sed -i -e 's/%{name}-work=.*/%{name}-work=\/var\/lib\/%{name}/' $RPM_BUILD_ROOT/usr/share/%{name}/conf/nexus.properties
 mkdir -p $RPM_BUILD_ROOT/var/lib/%{name}
 
 # patch pid dir
-sed -i -e 's/PIDDIR=.*/PIDDIR=\/var\/run\/%{name}/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/nexus
-mkdir -p $RPM_BUILD_ROOT/var/run/%{name}
+sed -i -e 's/PIDDIR=.*/PIDDIR=\/var\/lib\/%{name}\/run/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/nexus
+mkdir -p $RPM_BUILD_ROOT/var/lib/%{name}/run
 
 # Patch user
 sed -i -e 's/#RUN_AS_USER=.*/RUN_AS_USER=%{name}/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/nexus
 
-# patch logfile
-mkdir -p $RPM_BUILD_ROOT/var/log/%{name}
-sed -i -e 's/wrapper.logfile=.*/wrapper.logfile=\/var\/log\/%{name}\/%{name}.log/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/jsw/conf/wrapper.conf
+# patch tmpdir
+sed -i -e 's/wrapper.java.additional.1=-Djava.io.tmpdir=.\/.*/wrapper.java.additional.1=-Djava.io.tmpdir=\/tmp/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/jsw/conf/wrapper.conf
+rm -rf $RPM_BUILD_ROOT/usr/share/%{name}/tmp
 
-# Since java is a virtual package, we can only check that >= 1.8.0 is installed, but not < 1.9
-# Also it is possible that despite 1.8.0 is installed, it is not the default version, so we check
-# for it
+# Patch logfile
+sed -i -e 's/wrapper.logfile=.*/wrapper.logfile=\/var\/log\/%{name}\/%{name}.log/' $RPM_BUILD_ROOT/usr/share/%{name}/bin/jsw/conf/wrapper.conf
+mkdir -p $RPM_BUILD_ROOT/var/log/%{name}
+rm -rf $RPM_BUILD_ROOT/usr/share/%{name}/logs
+
+# Check if 1.8.0 is the default version, as it is what Nexus expects
 JAVA_MAJOR_VERSION=$(java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f2)
 if [ "${JAVA_MAJOR_VERSION}" != "8" ]; then
   echo "WARNING! Default java version does not seem to be 1.8!"
-  echo "Keep in mind that Nexus3 is only compatible with Java 1.8.0 at the moment!"
+  echo "Keep in mind that Nexus2 is only compatible with Java 1.8.0 at the moment!"
   echo "Tip: Check if 1.8 is installed and use (as root):"
   echo "update-alternatives --config java"
   echo "to adjust the default version to be used"
 fi
 
+%pre
+/usr/bin/getent passwd %{name} > /dev/null || /usr/sbin/useradd -r -d /var/lib/%{name} -U -s /bin/bash %{name}
+%if 0%{?suse_systemd}
+%service_add_pre %{nexus}.service
+%endif
 
 %post
-%if %use_systemd
-/usr/bin/systemctl daemon-reload
-%else
-%{chkconfig_cmd} --add %{name}
+%if 0%{?suse_systemd}
+%service_add_post %{name}.service
+%endif
+%if 0%{?redhat_systemd}
+%systemd_post %{name}.service
 %endif
 
 %preun
-%if %use_systemd
-/usr/bin/systemctl stop %{name}
+%if 0%{?use_systemd}
+%if 0%{?suse_systemd}
+%service_del_preun %{name}.service
+%endif
+%if 0%{?redhat_systemd}
+%systemd_preun %{name}.service
+%endif
 %else
-/etc/init.d/%{name} stop
-%{chkconfig_cmd} --del %{name}
+# Package removal, not upgrade
+if [ $1 = 0 ]; then
+    /sbin/service %{name} stop > /dev/null 2>&1
+    %{chkconfig_cmd} --del %{name}
+fi
 %endif
 
 %postun
-%if %use_systemd
-/usr/bin/systemctl daemon-reload
+%if 0%{?redhat_systemd}
+%systemd_postun %{name}.service
+%endif
+%if 0%{?suse_systemd}
+%service_del_postun -n %{name}.service
 %endif
 
 %clean
@@ -109,25 +147,29 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc
 %attr(-,%{name},%{name}) /etc/%{name}
+%dir /usr/share/%{name}
+%dir /usr/share/%{name}/conf
 %config(noreplace) /usr/share/%{name}/conf/*
-%attr(-,%{name},%{name}) /usr/share/%{name}/bin
-%attr(-,%{name},%{name}) /usr/share/%{name}/lib
-%attr(-,%{name},%{name}) /usr/share/%{name}/logs
-%attr(-,%{name},%{name}) /usr/share/%{name}/nexus
-%attr(-,%{name},%{name}) /usr/share/%{name}/tmp
 %doc /usr/share/%{name}/*.txt
-%attr(-,%{name},%{name}) /var/lib/%{name}
-%attr(-,%{name},%{name}) /var/log/%{name}
-%attr(-,%{name},%{name}) /var/run/%{name}
-%if %{use_systemd}
+/usr/share/%{name}/bin
+/usr/share/%{name}/lib
+/usr/share/%{name}/nexus
+%dir %attr(-,%{name},%{name}) /var/lib/%{name}
+%dir %attr(-,%{name},%{name}) /var/lib/%{name}/run
+%dir %attr(-,%{name},%{name}) /var/log/%{name}
+%if 0%{?use_systemd}
 %{_unitdir}/%{name}.service
 %else
 /etc/init.d/%{name}
 %endif
 
 %changelog
+* Fri Feb 28 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.16.01-2
+- Clean up spec and fix to build all distributions at OpenBuildService
+- Enable building and installation for Amazon Linux >= 2
+- Enable building and installation for for openSUSE Tumbleweed/Factory
+
 * Mon Jan 27 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.16.01-1
 - License for Nexus OSS is EPL-2.0 as stated at https://blog.sonatype.com/2012/06/nexus-oss-switched-to-the-eclipse-public-license-a-clarification-and-an-observation/
   and it is since 2012. Mistake inherited from the original packages from Jens Braeuer.
