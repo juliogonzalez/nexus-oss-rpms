@@ -22,15 +22,15 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.20.1.01
-Release: 2%{?dist}
+Version: 3.21.0.05
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.20.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.21.0-05-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,12 +168,39 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Feb 29 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.21.0.05-1
+- Update to Nexus 3.21.0-05
+- Bugfixes:
+  * NEXUS-18186: Disabling redeploy for a private Docker repo breaks the "latest" tag
+  * NEXUS-21730: Audit log does not log all attributes for repository change events
+  * NEXUS-21329: "Remove a member from a blob store group" task processes missing files in the source blob store
+  * NEXUS-18905: Cleanup tasks fail with "No search context found for id" error
+  * NEXUS-13306: Usernames containing non URL safe characters cannot authenticate using the Crowd realm 
+  * NEXUS-16009: Browse tree for NuGet proxy repositories shows packages that are not locally cached
+  * NEXUS-22051: PyPI group merge is not case sensitive
+  * NEXUS-22351: R PACKAGES file lost on upgrade to 3.20.x
+  * NEXUS-17477: Unable to install hosted gem which has multiple version requirements
+  * NEXUS-22052: Yum Metadata not rebuilt after staging deletion of rpm
+- Improvements:
+  * NEXUS-11730: Support for proxying p2 repositories. p2 is a technology for provisioning and managing
+                 Eclipse- and Equinox-based applications
+  * NEXUS-13325: Helm is the first application package manager running atop Kubernetes(k8s). It allows
+                 describing the application structure through convenient helm-charts and managing it with
+                 simple commands
+  * NEXUS-10886: NuGet V3 Proxy support gives Nexus Repository Manager users access to the up-to-date
+                 V3 API. This is the first part of a wider initiative to bring full V3 support, group and
+                 hosted will follow in future releases
+  * NEXUS-16251: Provide a common facility to allow RPM clients to get GPG keys to verify package
+                 signatures in remote repositories.
+  * NEXUS-13434: Provide npm cli ping support
+
 * Fri Feb 28 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.20.1.01-2
 - Clean up spec and fix to build all distributions at OpenBuildService
 - Enable building and installation for Amazon Linux >= 2
 - Enable building and installation for for openSUSE Tumbleweed/Factory
 
 * Mon Jan 27 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 3.20.1.01-1
+- Update to Nexus 3.20.1-01
 - Bugfixes:
   * NEXUS-22249: An error may occur when starting NXRM Pro due to race condition around the license loading.
   * NEXUS-22241: During the upgrade process from older releases (3.19.0 and before), NXRM may throw an exception
@@ -184,7 +211,7 @@ rm -rf $RPM_BUILD_ROOT
   and it is since 2012. Mistake inherited from the original packages from Jens Braeuer.
 - Update to Nexus 3.20.0-04
 - Bugfixes
-  * NEXUS-21311 : Yum and CentOS 8
+  * NEXUS-21311: Yum and CentOS 8
   * NEXUS-21371: npm package metadata does not return correct status code sometimes
   * NEXUS-19811: Offline and misconfigured blob store should be noted in UI
   * NEXUS-21368: Proxy repository removes get-params from HTTP sources
