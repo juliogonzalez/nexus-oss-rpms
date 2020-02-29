@@ -7,9 +7,7 @@ To build the RPM:
 - gz
 
 To run Nexus:
-- Any JDK/JRE (Oracle or OpenJDK) 1.8 installed (it is not included
-  as dependency because CentOS 7 does not provide a virtual package for
-  Java).
+- OpenJDK JRE 1.8 installed (no other Java versions are supported by Nexus 3 right now)
 
 # How to build
 
