@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.21.2.03
+Version: 3.22.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.21.2-03-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.22.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,35 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Mar 28 2020 Julio González Gil <packages@juliogonzalez.es> - 3.22.0.02-1
+- Update to Nexus 3.22.0-02
+- Bugfixes
+  * NEXUS-16159: "Require user tokens for repository authentication" now enforced properly
+  * NEXUS-19437: a blobstore in any other state than STARTED cannot be removed
+  * NEXUS-21011: Compact blob store task cannot hard delete blob assets when the blobstore is out of space
+  * NEXUS-21808: DockerTokenDecoder.dumpToken(String) method may fail to parse docker bearer tokens causing IndexOutOfBoundsException
+  * NEXUS-22054: "Repair - reconcile component database from blob store" task does not remove invalid component db references.
+  * NEXUS-22245: Cannot Delete NPM Scoped Folder via UI
+  * NEXUS-22602: Running metadata rebuild task with GA restrictions fails
+  * NEXUS-22666: concurrent uploads to the same maven GA may result in 500 response due to OConcurrentModificationException
+  * NEXUS-22669: First staging move to npm hosted repo fails with 500 error.
+  * NEXUS-22729: Cleanup Policy task results in removal of maven-metadata from non-timestamped snapshots
+  * NEXUS-22760: POST /service/extdirect/poll/rapture_State_get lists all tasks from the database
+  * NEXUS-22770: Change in stored Pypi proxy package paths creates duplicate assets and breaks browse node creation
+  * NEXUS-22802: AnonymousSettings.jsx does not respect nexus-context-path
+  * NEXUS-22853: Too many tasks scheduled if an upgrade requires rebuilding the browse_node table
+  * NEXUS-22896: performance regression in search REST API
+  * NEXUS-23048: Problem proxying NuGet packages hosted by GitHub Packages
+  * NEXUS-23072: Anonymous Access icon missing
+  * NEXUS-23104: Offline repositories allow UI upload
+  * NEXUS-23236: org.sonatype.nexus.quartz.internal.orient.JobStoreImpl is a concurrency bottleneck
+  * NEXUS-23272: Inability to add * permission to user on 3.21.2
+- Improvements
+  * NEXUS-5716: add a way to configure default privileges for any signed-in users
+  * NEXUS-20939: SAML integration
+  * NEXUS-22820: Process search index updates in the background in a non-blocking fashion
+  * NEXUS-21910: Additional REST provisioning support for npm, NuGet and PyPI repositories
+
 * Tue Mar 24 2020 Julio González Gil <packages@juliogonzalez.es> - 3.21.2.03-1
 - Update to Nexus 3.21.2-03
 - Bugfixes
