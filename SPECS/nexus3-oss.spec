@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.22.0.02
+Version: 3.22.1.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.22.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.22.1-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,9 +168,27 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Apr 17 2020 Julio González Gil <packages@juliogonzalez.es> - 3.22.1.02-1
+- Update to Nexus 3.22.1-02
+- Bugfixes
+  * CVE-2020-11753: Improper access controls allowed privileged user to craft requests in such a manner that scripting tasks could be created,
+                    updated or executed without use of the user interface or REST API
+  * NEXUS-23281: Requesting a SNAPSHOT artifact from a RELEASE Repo returns HTTP 400
+  * NEXUS-23348: SAML - New UI Login SSO Button does not respect the nexus-context-path
+  * NEXUS-23352: Conan integration in 3.22.0 does not handle Header Only packages
+  * NEXUS-23359: SAML - NPE thrown if IdP metadata does not contain SingleLogoutService element
+  * NEXUS-23399: NuGet v3 proxy repository will not serve cached content if remote is blocked
+  * NEXUS-23441: Already cached NuGet v2 proxy repository content will return 502 if Component Max Age expires and the remote is not available
+  * NEXUS-23504: Privileged user can create, modify and execute scripting tasks
+  * NEXUS-23556: CVE-2020-11415: LDAP system credentials can be exposed by admin user
+- Improvements:
+  * NEXUS-23396: Admin - Cleanup repositories using their associated policies task should lazily mark maven metadata for rebuild
+
 * Sat Mar 28 2020 Julio González Gil <packages@juliogonzalez.es> - 3.22.0.02-1
 - Update to Nexus 3.22.0-02
 - Bugfixes
+  * CVE-2020-11444: Improper access controls allowed authenticated users to craft requests in such a manner that configuration for other
+                    users in the system could be affected
   * NEXUS-16159: "Require user tokens for repository authentication" now enforced properly
   * NEXUS-19437: a blobstore in any other state than STARTED cannot be removed
   * NEXUS-21011: Compact blob store task cannot hard delete blob assets when the blobstore is out of space
