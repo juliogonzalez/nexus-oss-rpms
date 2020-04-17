@@ -22,15 +22,15 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 2.14.16.01
-Release: 2%{?dist}
+Version: 2.14.17.01
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://www.sonatype.org/downloads/%{name}-2.14.16-01-bundle.tar.gz
+Source0: http://www.sonatype.org/downloads/%{name}-2.14.17-01-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -165,6 +165,11 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Mar 17 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.17.01-1
+- Update to 2.14.17-01
+- Bugfixes
+  * NEXUS-23556: CVE-2020-11415: LDAP system credentials can be exposed by admin user
+
 * Fri Feb 28 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.16.01-2
 - Clean up spec and fix to build all distributions at OpenBuildService
 - Enable building and installation for Amazon Linux >= 2
