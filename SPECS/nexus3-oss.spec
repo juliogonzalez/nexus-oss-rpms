@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.22.1.02
+Version: 3.23.0.03
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.22.1-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.23.0-03-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,23 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed May  6 2020 Julio González Gil <packages@juliogonzalez.es> - 3.23.0.03-1
+- Update to Nexus 3.23.0-03
+- Bugfixes:
+  * NEXUS-23360: Docker: Infinite loop for authorization to registry.connect.redhat.com
+  * NEXUS-23548: Helm Chart Repository API version format incorrect
+  * NEXUS-20349: NuGet repository returns multiple versions as islatest=true
+  * NEXUS-23420: NonResolvablePackageException thrown when downloading a package through the PyPI group
+  * NEXUS-23398: Retrieval of some packages from PyPI fails
+  * NEXUS-23487: PyPI repository returns 500 error response if remote returns an invalid response.
+  * NEXUS-23379: Invalid content returned through proxy prevents valid content from being retreived
+  * NEXUS-23616: Blob Store API allows users to create a blobstore without path
+- Improvements:
+  * NEXUS-11468: Import for Raw and Maven formats (requires Pro license)
+  * NEXUS-16954: Nexus Intelligence via npm audit
+  * NEXUS-21087: (Docker) Support OCI registry format
+  * NEXUS-23436: Clearer anonymous panel for upgrade wizard
+
 * Fri Apr 17 2020 Julio González Gil <packages@juliogonzalez.es> - 3.22.1.02-1
 - Update to Nexus 3.22.1-02
 - Bugfixes
