@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.23.0.03
+Version: 3.24.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.23.0-03-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.24.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,33 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Jun 13 2020 Julio González Gil <packages@juliogonzalez.es> - 3.24.0.02-1
+- Update to Nexus 3.24.0-02
+- Bugfixes:
+  * NEXUS-17288: Image broken on logger edit
+  * NEXUS-19529: viewing the UI repositories list will trigger s3 blobstore metrics retrieval even if that blobstore is not used
+  * NEXUS-23071: /beta/repositories/{format}/group/{repositoryName} example model is wrong
+  * NEXUS-23082: Update embedded Java version to latest Java 8
+  * NEXUS-23418: rest api proxy repository httpClient authentication does not take effect
+  * NEXUS-23551: Yum Authenticating against RHEL servers in AWS
+  * NEXUS-23712: items added or removed from yum metadata files when metadata is rebuilt may not be logged
+  * NEXUS-23761: beta/repositories/{format}/hosted/{repositoryName} has invalid parameters in example
+  * NEXUS-23800: Race condition in lazy maven metadata rebuild causes build failures, slow builds
+  * NEXUS-23872: Unable to set repository HTTP client auth via REST
+  * NEXUS-23903: long running database queries for docker repositories can lead to thread and db connection pool exhaustion
+  * NEXUS-23980: 'USER_ROLE_MAPPING' was not found in database 'component' exceptions seen with docker
+- Improvements:
+  * NEXUS-23588: Repository Management API missing yum proxy
+  * NEXUS-23650: Allow REST API to Enable/Disable Anonymous Access
+  * NEXUS-23798: REST API to enable User Tokens
+  * NEXUS-23854: Export for Raw and Maven formats (Pro Only)
+  * NEXUS-23870: "Node already has an asset" for browse tree rebuild should not fail Transactions status check
+  * NEXUS-23897: Memory settings in docker image are too low
+  * NEXUS-23970: NuGet v3 Hosted
+  * NEXUS-24091: REST API for Cocoapods repositories
+  * NEXUS-24092: REST API for Raw repositories
+  * NEXUS-24093: REST API for RubyGems repositories
+
 * Wed May  6 2020 Julio González Gil <packages@juliogonzalez.es> - 3.23.0.03-1
 - Update to Nexus 3.23.0-03
 - Bugfixes:
