@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.24.0.02
+Version: 3.25.0.03
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.24.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.25.0-03-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,36 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jul 14 2020 Julio González Gil <packages@juliogonzalez.es> - 3.25.0.03-1
+- Update to Nexus 3.25.0-03
+- Bugfixes:
+  * NEXUS-20640: docker push may fail with blob upload unknown due to race condition
+  * NEXUS-20829: Correct the upgrade screen to state that multiple upgrades from Nexus 2.x to 3.y is not supported.
+  * NEXUS-23550: p2 proxy repository does not work with IQ update site
+  * NEXUS-23759: context missing from MavenRestoreBlobStrategy - Skipping as no maven coordinates found and is not maven metadata
+  * NEXUS-23830: docker anonymous pull fails with 401 when user tokens are enabled
+  * NEXUS-23887: LDAP connection UI looks broken, constantly prompts for password
+  * NEXUS-23895: Save of LDAP user and group settings fails with error.
+  * NEXUS-24098: Snapshot GAV metadata rebuilt incorrectly if packaging has multiple segments
+  * NEXUS-24124: OCI - Docker repos should respect accept headers
+  * NEXUS-24132: Import Attributes fail if an asset has a null componentId
+  * NEXUS-24194: NuGet V3 Hosted - Search prerelease flag does not work
+  * NEXUS-24222: Reduce likelihood of OOM when accessing NuGet feed
+  * NEXUS-24248: NuGet v3 proxy fails to work with HA-C
+  * NEXUS-24267: download of podspec.json file through proxy repo which does not exist at the remote causes NullPointerException and 500 status code
+  * NEXUS-24283: Repository export errantly tries to validate delta files for every asset, even in other repositories
+  * NEXUS-24334: NPM Audit logs error on retrieving package
+  * NEXUS-24355: Nuget V3 - Impossible to use hosted/group/proxy as remote for proxy
+  * NEXUS-24457: npm package metadata dist-tags section can be empty when merged from a group repository member group repository
+- Improvements
+  * NEXUS-10886: NuGet v3 JSON format support
+  * NEXUS-10886: Iport for npm and NuGet formats (PRO only)
+  * NEXUS-20642: add thread id to audit log entries
+  * NEXUS-24256: Enforce Password Complexity Requirement
+  * NEXUS-24568: Cache npm audit results to improve performance
+  * NEXUS-23923: Email REST API out of beta
+  * NEXUS-24288: OSS Index Link Integration (OSS Only)
+
 * Sat Jun 13 2020 Julio González Gil <packages@juliogonzalez.es> - 3.24.0.02-1
 - Update to Nexus 3.24.0-02
 - Bugfixes:
