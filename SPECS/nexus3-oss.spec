@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.25.0.03
+Version: 3.25.1.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.25.0-03-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.25.1-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,23 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Jul 30 2020 Julio González Gil <packages@juliogonzalez.es> - 3.25.1.02-1
+- WARNING: A critical bug has been discovered in version 3.25.1-02, if a custom web
+  context path is being used (e.g. "/nexus") UI logins will not work.
+  This is not the case with default installations performed by this package.
+  But if you are using a custom web context wait until NEXUS-24711 is fixed with
+  a new release
+- Update to Nexus 3.25.1-02
+- Bugfixes:
+  * NEXUS-24596: CVE-2020-15871 Remote Code Execution vulnerability
+                 (https://support.sonatype.com/hc/en-us/articles/360052192693)
+- Improvements:
+  * NEXUS-24488: Avoid excessive database queries in OSSIndex integration
+  * NEXUS-24489: Batch requests from browse UI for OSSIndex
+  * NEXUS-24128: REST API delete requests for Maven components can have slow performance
+  * NEXUS-24112: Staging move of Maven components can be very slow due to metadata rebuilds
+  * NEXUS-24612: Unable to browse repository - OssIndexVulnerabilityClient Timeout
+
 * Tue Jul 14 2020 Julio González Gil <packages@juliogonzalez.es> - 3.25.0.03-1
 - Update to Nexus 3.25.0-03
 - Bugfixes:
@@ -189,7 +206,7 @@ rm -rf $RPM_BUILD_ROOT
   * NEXUS-24334: NPM Audit logs error on retrieving package
   * NEXUS-24355: Nuget V3 - Impossible to use hosted/group/proxy as remote for proxy
   * NEXUS-24457: npm package metadata dist-tags section can be empty when merged from a group repository member group repository
-- Improvements
+- Improvements:
   * NEXUS-10886: NuGet v3 JSON format support
   * NEXUS-10886: Iport for npm and NuGet formats (PRO only)
   * NEXUS-20642: add thread id to audit log entries
