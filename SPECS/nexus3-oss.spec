@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.25.1.04
+Version: 3.26.0.04
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.25.1-04-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.26.0-04-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,27 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Aug 11 2020 Julio González Gil <packages@juliogonzalez.es> - 3.26.0.04-1
+- WARNING: Eclipse Jetty Version may Require Configuration Change On Upgrade
+  Check https://issues.sonatype.org/browse/NEXUS-24867 for details or update
+  straight to 3.26.1.02-1
+- Update to Nexus 3.26.0-04
+- Bigfixes:
+  * NEXUS-23065: `Docker - Delete incomplete uploads` task will stop if it errors reading a single asset
+  * NEXUS-23417: During upgrade of PyPI proxy in 3.22, browse nodes are rebuilt too quickly.
+  * NEXUS-24226: Prometheus metrics endpoint may be using more CPU than expected.
+  * NEXUS-24317: NuGet v3 proxy: index.json still available after remote changing
+  * NEXUS-24592: CVE-2020-15868 - Access controls bypass
+  * NEXUS-24601: Search API sorting doesn't work
+  * NEXUS-24619: Export filenames that are supported in windows (and import those files properly as well)
+  * NEXUS-24671: Audit log is not recording events even if feature is enabled
+- Improvements:
+  * NEXUS-24788: Import and Export for Docker, PyPI, Rubygems and Yum (PRO only)
+  * NEXUS-23928: Update /beta/repositories REST endpoints updated to /v1.  Beta endpoints still work.
+  * NEXUS-23930: Update v1 REST endpoints for Security API.  Beta endpoints still work.
+  * NEXUS-24416: Yum repodata metadata handles multiple level rebuild better
+  * NEXUS-24858: Repair - Reconcile component database from blob store task now includes NuGet format
+
 * Fri Jul 31 2020 Julio González Gil <packages@juliogonzalez.es> - 3.25.1.04-1
 - Bugfixes:
   * NEXUS-24711: Fix UI login when using custom web context paths
