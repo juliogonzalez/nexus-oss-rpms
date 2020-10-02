@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.27.0.03
+Version: 3.28.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.27.0-03-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.28.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,71 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Oct  2 2020 Julio González Gil <packages@juliogonzalez.es> - 3.28.0.01-1
+- Update to Nexus 3.28.0-01
+- Bugfixes:
+  * NEXUS-21107: Raw repo folders with special characters created using UI
+                 cannot be deleted
+  * NEXUS-23968: PyPiHostedFacet does not delete TempBlob on getIndex
+  * NEXUS-23977: Large docker image upload does not work well with slow inbound network
+  * NEXUS-24227: archetype-catalog.xml is imported by import task to a maven repository
+  * NEXUS-24682: Helm repositories require the packages to be relative to the index.yaml
+  * NEXUS-24718: Running "docker delete unused manifests and images" task when
+                 blob storage is not available deletes all layers
+  * NEXUS-24830: npm audit error with quarantined components
+  * NEXUS-24833: After doing "Export assets" task then "Import external files"
+                 does not preserve lastBlobUpdated (last_updated)
+  * NEXUS-24846: Wrong Timezone used for Apt Release file
+  * NEXUS-24868: Group does not export semver2 endpoints
+                 `RegistrationsBaseUrl/Versioned` when used as NuGet V3
+  * NEXUS-24916: SAML configuration error root causes are swallowed and not
+                 logged at default levels
+  * NEXUS-24918: npm audit should not fail if package.json contains a
+                 dependency that can't be found
+  * NEXUS-24998: Continuation token fails intermittently with 406 response but
+                then eventually works.
+  * NEXUS-24999: query params for yum related db query not logged
+  * NEXUS-25036: repositories with version policy of RELEASE should avoid
+                 processing any SNAPSHOT related requests
+  * NEXUS-25039: Download of docker tags from hosted repository can fail with
+                 400 response
+  * NEXUS-25156: Npm Audit doesn't fail fast when no IQ server is configured
+  * NEXUS-25190: Newly deployed RPM files do not always appear in yum metadata files
+  * NEXUS-25294: DockerFacetUtils.findAssetByContentDigest NXRM 3.0.0-M7
+                 backwards compatibility code is non-performant under load
+  * NEXUS-25296: 502 error if a nuget-v3 group contains a proxy with different
+                 nuget version
+  * NEXUS-25340: IllegalArgumentException: Invalid range for Docker Pushes
+  * NEXUS-25347: org.eclipse.jetty loggers do not log messages if levels are edited
+  * NEXUS-25378: docker PUT and PATCH requests may write to the same blob
+                 causing docker pushes to fail due to InvalidContentException:
+                Content type could not be determined
+- Improvements:
+  * NEXUS-24842: Slow performance pushing large images to S3 based blobstore
+  * NEXUS-12016: Moving repositories between blob stores (PRO only)
+  * NEXUS-14448: Include IQ link in Maven output when a component blocked by Firewall
+  * NEXUS-18283: Ability to Add Custom AWS S3 Regions to Blobstore Configuration
+  * NEXUS-19858: Confirmation when promoting a blob store
+  * NEXUS-24904: nxrm 3.26.0 introduces new ERROR level log messages from org.eclipse.jetty.util.log.StdErrLog
+  * NEXUS-25099: Group deployment for NPM (PRO only)
+  * NEXUS-25117: add configurability to how S3 temporary blobs are deleted
+  * NEXUS-19572: Go specific search
+- Other:
+  * NEXUS-25336: Replace Google (Guava) Supplier with Java Supplier, people
+                 consuming or implementing them will need to update those
+                 usages to java.util.function.Supplier.
+  * NEXUS-25209: Use DB-agnostic TempBlob where possible. Any scripts or third
+                 party plugins using org.sonatype.nexus.repository.storage.TempBlob
+                 will need to change to use of
+                 org.sonatype.nexus.repository.view.payloads.TempBlob.
+
+  * NEXUS-25162: Consolidate implementations of WritePolicy.
+                 org.sonatype.nexus.repository.storage.WritePolicy has been
+                 moved to org.sonatype.nexus.repository.config.WritePolicy.
+                 This will impact any groovy scripts
+                 using the org.sonatype.nexus.script.plugin.RepositoryApi to
+                 create repositories.
+
 * Sat Sep  5 2020 Julio González Gil <packages@juliogonzalez.es> - 3.27.0.03-1
 - Update to Nexus 3.27.0-03
 - Bugfixes:
