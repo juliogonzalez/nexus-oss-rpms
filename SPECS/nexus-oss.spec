@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 2.14.17.01
+Version: 2.14.18.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://www.sonatype.org/downloads/%{name}-2.14.17-01-bundle.tar.gz
+Source0: http://www.sonatype.org/downloads/%{name}-2.14.18-01-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -165,9 +165,14 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Oct  2 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.18.01-1
+- Update to 2.14.18-01
+- Bugfixes:
+  * NEXUS-21802: Maven metadata sha256/sha512 checksum in staging repositories
+
 * Fri Apr 17 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.17.01-1
 - Update to 2.14.17-01
-- Bugfixes
+- Bugfixes:
   * NEXUS-23556: CVE-2020-11415: LDAP system credentials can be exposed by admin user
 
 * Fri Feb 28 2020 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.16.01-2
@@ -179,7 +184,7 @@ rm -rf $RPM_BUILD_ROOT
 - License for Nexus OSS is EPL-2.0 as stated at https://blog.sonatype.com/2012/06/nexus-oss-switched-to-the-eclipse-public-license-a-clarification-and-an-observation/
   and it is since 2012. Mistake inherited from the original packages from Jens Braeuer.
 - Update to 2.14.16-01
-- Bugfixes
+- Bugfixes:
   * NEXUS-22014: CVE-2019-15893: Remote Code Execution vulnerability
   * NEXUS-22453: Update Apache Shiro library to resolve security vulnerability
   * NEXUS-22313: Invalid content-range header returned
@@ -187,7 +192,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Oct 17 2019 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.14.15.01-1
 - Update to 2.14.15-01
-- Bugfixes
+- Bugfixes:
   * NEXUS-21044: CVE-2019-15893: Remote Code Execution vulnerability
   * NEXUS-21193: CVE-2019-16530: Remote Code Execution vulnerability
   * NEXUS-20626: CVE-2019-5475: OS Command Injection vulnerability (second part to the fix in 2.14.14)
