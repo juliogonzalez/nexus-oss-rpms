@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.29.0.02
+Version: 3.29.1.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.29.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.29.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,21 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Dec 25 2020 Julio González Gil <packages@juliogonzalez.es> - 3.29.1.01-1
+- Update to Nexus 3.29.1-01
+- Bugfixes:
+  * NEXUS-24391: 'Destination already contains component' error when using
+                 staging API
+  * NEXUS-25504: Unable to pull images from hosted docker repo after move to
+                 new blobstore
+  * NEXUS-25600: Repository Import Ignores Validation
+  * NEXUS-25611: Installing via helm proxy errors if not using official remote
+  * NEXUS-25801: Group repository registration API requests may fail
+  * NEXUS-25902: Source blob store is not logged in repository move task
+  * NEXUS-25903: Repository blob store set incorrectly after error in "admin -
+                 change repository blob store" task
+  * NEXUS-25936: npm audit fails with 500 response using group and anonymous
+
 * Sat Dec  5 2020 Julio González Gil <packages@juliogonzalez.es> - 3.29.0.02-1
 - Update to Nexus 3.29.0-02
 - Bugfixes:
