@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.29.2.02
+Version: 3.30.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.29.2-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.30.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,78 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Mar  5 2021 Julio González Gil <packages@juliogonzalez.es> - 3.30.0.01-1
+- Update to Nexus 3.30.0-01
+- Bugfixes:
+  * NEXUS-12022: Allow configuring HTTPS Maven proxy repositories with
+                 pre-emptive authentication
+  * NEXUS-18610: Raw proxy errors on URL encoded space and plus (+) characters
+  * NEXUS-19181: staging NullPointerException when moving docker assets via
+                 DockerComponentDirector.maybeCopyAssets
+  * NEXUS-23750: Does not support npm GitHub Package Registry
+  * NEXUS-24485: Docker Manifest generation is incorrect for Redeploy Disabled
+                 repositories.
+  * NEXUS-25148: Incremental yum rebuilds with only COMPS files are ignored
+  * NEXUS-25501: Logout with anonymous off fires JS error, can malform page
+  * NEXUS-25626: Docker redeploy on the latest tag fails when more than one tag
+                 exists for the image
+  * NEXUS-25733: NuGet v3 repository index.json generation
+  * NEXUS-25783: Browse of NuGet packages from visual studio fails if user
+                 doesn't have browse privileges to all group members
+  * NEXUS-25784: Browse request to NuGet v3 search URL in group fails
+                 completely if one of the group's members has DNS lookup
+                 failure
+  * NEXUS-25868: Podman push of new image tag fails when docker cli push
+                 succeeds for the same actions
+  * NEXUS-25904: The "admin - change repository blob store" task should not
+                 allow selection of a promoted blob store
+  * NEXUS-25908: nuget restore does not resolve inbound normalized package
+                 versions to unnormalized published versions using NuGet v3
+  * NEXUS-25924: If the remote of a NuGet v3 proxy is not reachable it breaks
+                 requests to a NuGet group
+  * NEXUS-25985: "Docker - Delete unused manifests and images" task deletes
+                 digest manifests referenced by other manifests
+  * NEXUS-26003: Helm proxy : difference between helm index file and real
+                 artifact url
+  * NEXUS-26036: wrong issuer displayed for trusted SSL certificates
+  * NEXUS-26093: Create proxy repository in API UI fails due to password
+                 missing from Authentication JSON
+  * NEXUS-26099: No way to set "useTrustStore" in proxy repository REST API
+  * NEXUS-26118: pip search does not work *via* NXRM PyPI proxy to NXRM PyPI
+                 repository and authentication is required
+  * NEXUS-26129: Promoting a nested blob store causes it to be removed entirely
+  * NEXUS-26132: upgrade of NXRM 2 to NXRM 3 maven assets fails due to
+                 IllegalStateException: Missing {attributes:checksum} sha256
+  * NEXUS-26315: Cleanup Policy List shows Error 500 after Upgrade 3.28.0
+                 to 3.29.2
+  * NEXUS-26355: sha512 or sha256 hashes are processed by expensive repository
+                 content validation
+  * NEXUS-26379: DockerFacetUtils.findAssetByContentDigest() causes poor
+                 performance under load
+  * NEXUS-26453: saving the s3 blobstore config can break async tmp blob
+                deletes by not restarting the async delete thread pool
+  * NEXUS-26473: Thread cooperation does not work when recovering from missing
+                 blobs in proxy repositories
+  * NEXUS-26483: Nexus UI causes Uncaught TypeError when the username contains
+                 'api' string with privilege 'nx-api-reader'
+  * NEXUS-26504: Newly created compact blob store task has "multinode=true"
+  * NEXUS-26605: Rebuild metadata fails to rebuild corrupt metadata files
+  * NEXUS-26611: conda proxy repositories do not support inbound conditional
+                 HTTP GET HEAD
+  * NEXUS-26676: IllegalOperationException: Repair - Rebuild Maven repository
+                 metadata
+- Improvements:
+  * NEXUS-24446: Add Azure Blob Storage support to NXRM blob store
+  * NEXUS-25275: improve docker repository human readable error response
+                 messages
+  * NEXUS-25623: Provide a different status than Quarantined for components
+                 Pending Quarantine
+  * NEXUS-25909: Protect inbound HTTPS connections against Weak Diffie-Hellman
+                 Keys and Logjam by default
+  * NEXUS-26196: Allow enabling truststore with Repository Management REST API
+  * NEXUS-26319: remove reference to sonatype-public-grid from pom files
+  * NEXUS-26606: Upgrade Eclipse Jetty to 9.4.38.v20210224
+
 * Fri Jan  8 2021 Julio González Gil <packages@juliogonzalez.es> - 3.29.2.02-1
 - Update to Nexus 3.29.2-02
 - Bugfixes:
