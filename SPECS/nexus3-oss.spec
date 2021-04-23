@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.30.0.01
+Version: 3.30.1.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.30.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.30.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -168,6 +168,24 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Apr 23 2021 Julio González Gil <packages@juliogonzalez.es> - 3.30.1.01-1
+- Update to Nexus 3.30.1-01
+- Bugfixes:
+  * Security fix for CVE-2021-30635 (Information Disclosure).
+    See https://support.sonatype.com/hc/en-us/articles/1500006879561 for
+    details.
+  * Security fix for CVE-2021-29159 (XSS vulnerability).
+    See https://support.sonatype.com/hc/en-us/articles/1500005031082 for
+    details.
+  * Security fix for CVE-2021-29158 (Sensitive Information Disclosure).
+    See https://support.sonatype.com/hc/en-us/articles/1500006126462 for
+    details.
+  * NEXUS-27384: Upgrade Eclipse Jetty to 9.4.40.v20210413
+  * NEXUS-26789: Performance improvement to rebuilding GA maven-metadata.xml
+  * NEXUS-26501: Package content is out of specification when downloading from NuGet hosted
+  * NEXUS-27013: Raw proxy is encoding slashes for outbound requests
+  * NEXUS-26855: Non-indexed raw proxy repositories cannot be browsed
+
 * Fri Mar  5 2021 Julio González Gil <packages@juliogonzalez.es> - 3.30.0.01-1
 - Update to Nexus 3.30.0-01
 - Bugfixes:
