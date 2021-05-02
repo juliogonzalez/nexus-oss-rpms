@@ -32,4 +32,4 @@ RUN groupadd -g ${GID} ci && \
 
 STOPSIGNAL SIGRTMIN+3
 
-CMD ["/sbin/init"]
+CMD ["/bin/bash", "/opt/start_wait.sh"]
