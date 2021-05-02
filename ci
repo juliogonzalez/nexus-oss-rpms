@@ -6,7 +6,7 @@ LANG=en_EN
 SCRIPT=$(basename ${0})
 
 # Supported distributions
-SUPPORTEDDISTROS='centos6 centos7 amazon2018.03 opensuse15.1'
+SUPPORTEDDISTROS='centos7 amazon2018.03 amazonlinux2 opensuse15.3'
 
 # Supported Nexus major versions
 NEXUSMAJORVERS='2 3'
@@ -131,14 +131,15 @@ esac
 
 # Check distribution
 case "${DISTRO}" in
-  centos6)       DOCKER_IMAGE='juliogonzalez/centos6-nexus:latest'
-                 START_CMD="/etc/init.d/${PACKAGE_NAME} start" ;;
   centos7)       DOCKER_IMAGE='juliogonzalez/centos7-nexus:latest'
                  DOCKER_PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
                  START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
   amazon2018.03) DOCKER_IMAGE='juliogonzalez/amazon2018.03-nexus:latest'
                  START_CMD="/etc/init.d/${PACKAGE_NAME} start";;
-  opensuse15.1)  DOCKER_IMAGE='juliogonzalez/opensuse15.1-nexus:latest'
+  amazonlinux2)  DOCKER_IMAGE='juliogonzalez/amazonlinux2-nexus:latest'
+                 DOCKER_PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+                 START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
+  opensuse15.3)  DOCKER_IMAGE='juliogonzalez/opensuse15.3-nexus:latest'
                  DOCKER_PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
                  START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
   *)             print_error_unsupported_distro

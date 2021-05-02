@@ -1,4 +1,4 @@
-FROM opensuse/leap:15.1
+FROM opensuse/leap:15.3
 MAINTAINER Julio Gonzalez Gil <git@juliogonzalez.es>
 
 USER root

@@ -7,7 +7,7 @@ LANG=en_EN
 SCRIPT=$(basename ${0})
 
 # Supported distributions versions
-SUPPORTEDDISTROS="centos6 centos7 amazon2018.03 opensuse15.1"
+SUPPORTEDDISTROS="centos7 amazon2018.03 amazonlinux2 opensuse15.3"
 
 # Parameters for docker
 GID=$(id -G|cut -d' ' -f1)
