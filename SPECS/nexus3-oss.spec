@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.30.1.01
+Version: 3.31.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.30.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.31.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -159,6 +159,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/%{name}/lib
 /usr/share/%{name}/public
 /usr/share/%{name}/system
+/usr/share/%{name}/replicator/
 %attr(-,%{name},%{name}) /var/lib/%{name}
 %attr(-,%{name},%{name}) /var/log/%{name}
 %if 0%{?use_systemd}
@@ -168,6 +169,53 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Jun 17 2021 Julio González Gil <packages@juliogonzalez.es> - 3.31.0.01-1
+- Update to Nexus 3.31.0-01
+- Bugfixes:
+  * NEXUS-26177: Deleting an npm repository or invalidating the cache breaks
+                 npm audit.
+  * NEXUS-26312: "Last downloaded" not updating consistently in NuGet.
+  * NEXUS-26358: WARN messages from SupportRestorer Can't find file to
+                 restore data
+  * NEXUS-27614: PyPI can swallow errors when the simple index is being
+                 re-written.
+  * NEXUS-26683: "Remove a member from a blob store group" task can't remove a
+                 blob store if one bytes file is missing
+  * NEXUS-26732: Race Condition in Docker format can cause assets to be
+                 mistakenly deleted.
+  * NEXUS-26737: Deleting manifest with Docker API does not delete all tags.
+  * NEXUS-26829: Copy and config links incorrect for nuget V3 proxy repos
+  * NEXUS-26845: HTTP error status code not logged on proxy repository
+                automatic blocking
+  * NEXUS-26938: Use HEAD request to determine whether remote content has changed
+                 instead of conditional GET to avoid hitting DockerHub rate
+                 limit prematurely.
+  * NEXUS-26971: Incorrect results can be returned when using npm show with
+                 group repositories.
+  * NEXUS-27014: Cleanup policies and tasks do not fully consider Docker layers
+                 can be referenced by manifests in other repositories.
+  * NEXUS-27015: IllegalArgumentException on Publish Maven Index task.
+  * NEXUS-27130: GA maven-metadata.xml fails to refresh if a GAV is deleted via
+                 Browse's "Delete Folder" button
+  * NEXUS-27182: Blob paths traversal
+  * NEXUS-27427: Blank values for NuGet attributes.
+  * NEXUS-27436: npm metadata rebuild failing due to NPE.
+  * NEXUS-27563: S3 connection pool exhaustion when merging repomd.xml in group
+                 repositories.
+  * NEXUS-27564: Yum Group repomd.xml merge connection pool exhaustion causes
+                 problems.
+- Improvements:
+  * NEXUS-20252: Support Staging with PyPI format.
+  * NEXUS-23959: Define BlobStoreApiSoftQuota type allowableValues
+  * NEXUS-24311: Added hardlinks to import/export.
+  * NEXUS-26617: Upgrade karaf to 4.3.0
+  * NEXUS-26931: Added UI validation to ensure container name is all lower case
+                 alphanumeric.
+  * NEXUS-27597: Add ability to run `Repair - Reconcile component database from
+                 blob store` against a subset by time
+  * NEXUS-27683: StorageFacetCleanupTaskManager should remove & schedule task.
+  * NEXUS-27953: Upgrade Eclipse Jetty to 9.4.42.v20210604.
+
 * Fri Apr 23 2021 Julio González Gil <packages@juliogonzalez.es> - 3.30.1.01-1
 - Update to Nexus 3.30.1-01
 - Bugfixes:
