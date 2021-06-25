@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.31.0.01
+Version: 3.31.1.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.31.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.31.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,18 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Jun 25 2021 Julio González Gil <packages@juliogonzalez.es> - 3.31.1.01-1
+- Update to Nexus 3.31.1-01
+- Bugfixes:
+  * CVE-2021-34553: Information disclosure vulnerability fixed. Sonatype Nexus
+                    Repository 3 up to 3.31.0 allows a remote authenticated
+                    attacker to get a list of blob files and read the content
+                    of a blob file (via a crafted GET request) without having
+                    been granted access.
+  * NEXUS-28078: Docker - Delete unused manifests and images task may delete
+                 referenced layers if the database query to select components
+                 encounters limits
+
 * Thu Jun 17 2021 Julio González Gil <packages@juliogonzalez.es> - 3.31.0.01-1
 - Update to Nexus 3.31.0-01
 - Bugfixes:
