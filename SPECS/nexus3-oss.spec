@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.31.1.01
+Version: 3.32.0.03
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.31.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.32.0-03-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,20 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Jul  9 2021 Julio González Gil <packages@juliogonzalez.es> - 3.32.0.03-1
+- Update to Nexus 3.32.0-03
+- Bugfixes:
+  * NEXUS-27469: Using AzureBlobStore causes docker image upload failure with
+                 'digest invalid' error
+  * NEXUS-27617: Unable to configure SAML on docker image due to bug in
+                 included OpenJDK
+  * NEXUS-27753: The latest package version doesn't change in package root
+                 after component deleting
+  * NEXUS-28247: Docker GC Task incorrectly removing manifests and layers
+- Improvements:
+  * NEXUS-28203: Replication (Product Preview, PRO only)
+  * NEXUS-28205: APT Format support in PostgreSQL
+
 * Fri Jun 25 2021 Julio González Gil <packages@juliogonzalez.es> - 3.31.1.01-1
 - Update to Nexus 3.31.1-01
 - Bugfixes:
