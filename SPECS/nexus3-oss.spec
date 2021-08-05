@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.32.0.03
+Version: 3.33.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.32.0-03-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.33.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,25 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Aug  5 2021 Julio González Gil <packages@juliogonzalez.es> - 3.33.0.01-1
+- Update to Nexus 3.33.0-01
+- Bugfixes:
+  * NEXUS-27428: redundant download count attribute for NuGet v3
+  * NEXUS-28277: Fetching group npm package metadata concurrently can cause
+                 OConcurrentModificationException
+  * NEXUS-28362: slow request processing due to group trying to locate blobs in
+                 the wrong blobstore
+  * NEXUS-28381: Webhook ConnectionPoolTimeoutException: Timeout waiting for
+                 connection from pool after sending 20 requests
+  * NEXUS-28442: XSS injection
+- Improvements:
+  * NEXUS-28543: Conda Format support in Postgres (PRO only)
+  * NEXUS-28544: Git LFS Format support in Postgres (PRO only
+  * NEXUS-28545: R Format support in Postgres (PRO only
+  * NEXUS-28561: Conan Format support in Postgres (PRO only
+  * NEXUS-28562: npm format support in Postgres (PRO only
+  * Improvements to Resilient Nexus Repository Deployment Architecture
+
 * Fri Jul  9 2021 Julio González Gil <packages@juliogonzalez.es> - 3.32.0.03-1
 - Update to Nexus 3.32.0-03
 - Bugfixes:
