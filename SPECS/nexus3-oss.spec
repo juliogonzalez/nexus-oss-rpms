@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.33.1.01
+Version: 3.34.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.33.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.34.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,32 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Sep  5 2021 Julio González Gil <packages@juliogonzalez.es> - 3.34.0.01-1
+- Update to Nexus 3.34.0-01
+- Bugfixes:
+  * NEXUS-27932: "Manifest invalid" message when running the Docker GC task.
+  * NEXUS-28394: Last downloaded field not properly updating when installing
+                 or downloading through R proxy.
+  * NEXUS-28458: logged ERROR LastShutdownTimeServiceImpl 'Failed to process
+                 file - Assuming no previous start time' on startup
+  * NEXUS-28620: Nexus Database Migrator fails when symlink is used for data
+                 directory or data directory not in standard location.
+  * NEXUS-28807: Nexus-3-0 Stage-release Violations - 08/27/21 12:19 AM
+  * NEXUS-28808: Policy violation of com.thoughtworks.xstream : xstream: 1.4.17
+  * NEXUS-28853: This release includes a security fix for an HTTP header
+                 injection. See the CVE-2021-40143 advisory for full details.
+                 If you are using an earlier version, you should upgrade to
+                 this release immediately.
+- Improvements:
+  * NEXUS-28266: make S3 Connection Time to Live (TTL) setting configurable to
+                 help avoid socket connect timeouts
+  * Repository Replication (PRO only)
+  * NEXUS-28780: New Formats Supported for PostgreSQL and H2 Databases
+                 (PRO only):
+    > NEXUS-28677: CocoaPods Format support in Postgres (PRO only)
+    > NEXUS-28678: Go Format support in Postgres (PRO only)
+    > NEXUS-28781: Rubygems Format support in Postgres (PRO only)
+
 * Fri Sep  3 2021 Julio González Gil <packages@juliogonzalez.es> - 3.33.1.01-1
 - Update to Nexus 3.33.1-01
 - Bugfixes:
