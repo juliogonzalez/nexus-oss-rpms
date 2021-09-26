@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.34.0.01
+Version: 3.34.1.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.34.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.34.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,22 +169,37 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Sep 26 2021 Julio González Gil <packages@juliogonzalez.es> - 3.34.1.01-1
+- Update to Nexus 3.34.1-01
+- Bugfixes:
+  * NEXUS-28768: To facilitate migrating from Nexus Repository 2 to Nexus
+                 Repository 3, the npm package.json author field can now accept 
+                 both map and string values
+  * NEXUS-28815: NullPointerException at
+                 com.sonatype.nexus.migration.repository.migrators.datastore.NpmRepositoryMigrator.recordMetadata
+  * NEXUS-28821: org.sonatype.nexus.datastore.api.DuplicateKeyException in
+                 org.sonatype.nexus.repository.content.browse.store.BrowseNodeStore.mergeBrowseNode
+- Improvements:
+  * NEXUS-28522: change the default location for storing import task metadata
+  * NEXUS-28819: log in repo 3 application log the 2 to 3 migration state to 
+                 make it easy to determine why migration cannot be ended gracefully
+
 * Sun Sep  5 2021 Julio González Gil <packages@juliogonzalez.es> - 3.34.0.01-1
 - Update to Nexus 3.34.0-01
 - Bugfixes:
   * NEXUS-27932: "Manifest invalid" message when running the Docker GC task.
   * NEXUS-28394: Last downloaded field not properly updating when installing
-                 or downloading through R proxy.
+                 or downloading through R proxy
   * NEXUS-28458: logged ERROR LastShutdownTimeServiceImpl 'Failed to process
                  file - Assuming no previous start time' on startup
   * NEXUS-28620: Nexus Database Migrator fails when symlink is used for data
-                 directory or data directory not in standard location.
+                 directory or data directory not in standard location
   * NEXUS-28807: Nexus-3-0 Stage-release Violations - 08/27/21 12:19 AM
   * NEXUS-28808: Policy violation of com.thoughtworks.xstream : xstream: 1.4.17
   * NEXUS-28853: This release includes a security fix for an HTTP header
                  injection. See the CVE-2021-40143 advisory for full details.
                  If you are using an earlier version, you should upgrade to
-                 this release immediately.
+                 this release immediately
 - Improvements:
   * NEXUS-28266: make S3 Connection Time to Live (TTL) setting configurable to
                  help avoid socket connect timeouts
