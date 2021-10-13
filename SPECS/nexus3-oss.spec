@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.34.1.01
+Version: 3.35.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.34.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.35.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,58 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 14 2021 Julio González Gil <packages@juliogonzalez.es> - 3.35.0.02-1
+- Update to Nexus 3.35.0-02
+- Bugfixes:
+  * NEXUS-20284: Default content type for raw repositories is now "text/plain"
+  * NEXUS-26313: WWW-AUTHENTICATE header does not include needed scope of
+                 token
+  * NEXUS-26642: A removed docker asset at a remote will cause an already
+                 cached docker asset to be removed from a proxy repository when
+                 component age expires
+  * NEXUS-27125: npm proxy repo audit requests may trigger
+                 IllegalStateException Missing
+                 org.sonatype.nexus.repository.view.matchers.token.TokenMatcher$State
+                 while getting cached content
+  * NEXUS-27318: Maven - Publish Maven Indexer files task leaks inputstream
+  * NEXUS-27372: Delete of npm package tarball silently fails if the version
+                 isn't in package root metadata
+  * NEXUS-27628: Application id is not logged at any level when provided by npm
+                 audit command
+  * NEXUS-28166: Yum metadata not refreshed because of relying on
+                 "metadata_generation_time"
+  * NEXUS-28621: Nexus DB Migrator 3.33.0 fails with
+                 java.lang.StringIndexOutOfBoundsException error
+  * NEXUS-28805: Migrator attempts to migrate tagged components before tags
+                 have been processed resulting in NullPointerException
+                 executing step processComponentStep
+  * NEXUS-28842: Github npm package registry does not work with Nexus Repo 3
+  * NEXUS-28898: Contention rebuilding Maven hosted archetype-catalog.xml
+                 during repository 2 to 3 migration
+  * NEXUS-28908: Stuck RUNNABLE postgresql queries on
+                 SocketInputStream.socketRead0(Native Method)
+  * NEXUS-28922: Azure Blobstore creation fails with using Nexus 3.34.0-01 with
+                 PostgresDB
+- Improvements:
+  * NEXUS-16580: Migrate nx2 artifact information to nx3 during migration
+  * NEXUS-28686: Provide an option to not migrate repository content for
+                 repositories that are selected for migration from repo 2 to
+                 repo 3
+  * NEXUS-28891: Avoid building browse feature information during repository 2
+                 to 3 migration to improve migration performance
+  * NEXUS-28924: Option to force the migration process to end without abort
+                 before all content is migrated
+  * Firewall Integration Improvement: Policy-Compliant Component Selection
+    for npm
+  * Faster Imports with Hardlink Support for All Formats
+  * Improvements to Repository Replication (PRO only):
+    > Replicator Now Supports Docker and npm Formats
+    > Replicator Now Runs Continuously by Default
+    > New Replication Administrator Role
+  * Updated Database Migrator for Easier Migration Between PostgreSQL and H2
+    Databases (PRO only)
+  * Conan Hosted Support for PostgreSQL and H2 Databases (PRO only)
+
 * Sun Sep 26 2021 Julio González Gil <packages@juliogonzalez.es> - 3.34.1.01-1
 - Update to Nexus 3.34.1-01
 - Bugfixes:
