@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.35.0.02
+Version: 3.36.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.35.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.36.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,35 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Nov  9 2021 Julio González Gil <packages@juliogonzalez.es> - 3.36.0.01-1
+- Update to Nexus 3.36.0-01
+- Bugfixes:
+  * NEXUS-29088: Running the replication backfill blob attributes task will now
+                 process all blobs as expected.
+  * NEXUS-29319: This release includes a security fix for an incorrect access
+                 control. See the CVE-2021-42568 for full details.
+  * NEXUS-29407: This release includes a security fix for a server side request
+                 forgery vulnerability. See CVE-2021-43293 for full details.
+  * NEXUS-21814: Repair - Reconcile component database from blobstore may not
+                 process PyPI assets correctly
+  * NEXUS-27629: logging is too verbose when the submitted application id from
+                 npm audit is not found in the connected IQ server
+  * NEXUS-28714: Content validation does not work properly for OCI
+  * NEXUS-28717: "Docker - Delete unused manifests and images" task attempts to
+                 read files from the wrong Blob Store.
+  * NEXUS-28779: Use cases for name and type properties for datastores can be
+                  confusing
+  * NEXUS-29338: Image push after Nexus Repository upgrade not possible
+- Improvements:
+  * NEXUS-24332: Optimized How Yum Metadata is Rebuilt
+  * Faster Migration from Nexus Repository 2 to Nexus Repository 3
+  * Replication Improvement: Use Truststore Certificates for Replication
+    Connection (PRO only)
+  * Improvements to Database Migration to H2 or PostgreSQL (PRO only)
+    > Added OrientDB Health Check to Database Migration (PRO only)
+    > NEXUS-28789: Added Nexus Repository Database Version Check PRO (PRO only)
+  * Documentation Improvement: New Resiliency Example Using Azure  (PRO only)
+
 * Thu Oct 14 2021 Julio González Gil <packages@juliogonzalez.es> - 3.35.0.02-1
 - Update to Nexus 3.35.0-02
 - Bugfixes:
