@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.36.0.01
+Version: 3.37.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.36.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.37.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,59 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Nov 26 2021 Julio González Gil <packages@juliogonzalez.es> - 3.37.0.01-1
+- Update to Nexus 3.37.0-01
+- Bugfixes:
+  * NEXUS-17624: YUM repomd.xml not deleted from empty level-1 hosted
+                 repository
+  * NEXUS-19089: large set of dirs/files under directpath/nexus-repository-docker
+                  dir
+  * NEXUS-21878: failing to start one docker connector on startup prevents all
+                  other not started docker connectors from starting
+  * NEXUS-22125: Unable to query image tags via Registry API for proxied gcr.io
+  * NEXUS-26970: Docker proxy repository returns 502 when remote returns 401
+  * NEXUS-27033: Deploy of newly tagged multiarch manifest not permitted when
+                 redeploy is disabled
+  * NEXUS-27631: Download of docker manifest via UI fails if there is no
+                 history in the manifest
+  * NEXUS-27674: Unable to download conda component that was released from
+                 quarantine
+  * NEXUS-27788: "Docker - Delete incomplete uploads" task blocks all docker
+                 uploads
+  * NEXUS-28717: "Docker - Delete unused manifests and images" task attempts to
+                 read files from the wrong Blob Store.
+  * NEXUS-28855: Blob store space used constraint says “in MB” but it
+                 stores in bytes
+  * NEXUS-28918: Search API does not sort alpha-numeric versions correctly
+  * NEXUS-28921: Browse page is empty after migrating to the New DB because
+                 Rebuild repository browse tree task fails to be stored due to
+                 long name
+  * NEXUS-29234: java.lang.NumberFormatException for S3 blob stores on upgrade
+  * NEXUS-29342: Yum generated temp files are not deleted
+  * NEXUS-29343: Intermittent MissingBlobExceptions for Concurrent Requests
+  * NEXUS-29380: NX3: reconcile from blob store task can generate invalid npm
+                 version entries in metadata
+  * NEXUS-29433: fetching identical group npm package metadata concurrently can
+                 result in uncooperative threads and increased blobstore and
+                 database load
+- Improvements:
+  * NEXUS-16580: Migrate nx2 artifact information to nx3 during migration
+  * NEXUS-27145: Allow rebuild maven metadata task to fix invalid blob
+                 references for maven-metadata.xml
+  * NEXUS-28844: option to rebuild npm package metadata per repo or package
+  * NEXUS-28896: improve INSERT performance into format specific browse_node
+                 tables
+  * New "Repair - Rebuild npm metadata" Task
+  * The "Repair - Rebuild Maven repository metadata" Task Fixes Invalid Blob
+    References for maven-metadata.xml
+  * Retain Information About Assets Migrated from Nexus Repository Version 2 to
+    Version 3
+  * Improved S3 Blob Store Performance
+  * Replication Support for NuGet and PyPI  (PRO only)
+  * Improved Performance for those Migrating to Nexus Repository 3 with an
+    External PostgreSQL Database (PRO only)
+  * Improved Resilient Deployment Options (PRO only)
+
 * Tue Nov  9 2021 Julio González Gil <packages@juliogonzalez.es> - 3.36.0.01-1
 - Update to Nexus 3.36.0-01
 - Bugfixes:
