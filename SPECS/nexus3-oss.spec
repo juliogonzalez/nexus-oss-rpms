@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.37.2.02
+Version: 3.37.3.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.37.2-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.37.3-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,11 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Dec 30 2021 Julio González Gil <packages@juliogonzalez.es> - 3.37.3.02-1
+- Update to Nexus 3.37.3-02
+- Bugfixes:
+  * Update to the text on the Log4j Visualizer screen
+
 * Thu Dec 30 2021 Julio González Gil <packages@juliogonzalez.es> - 3.37.2.02-1
 - Update to Nexus 3.37.2-02
 - Improvements:
@@ -191,9 +196,9 @@ rm -rf $RPM_BUILD_ROOT
   * NEXUS-17624: YUM repomd.xml not deleted from empty level-1 hosted
                  repository
   * NEXUS-19089: large set of dirs/files under directpath/nexus-repository-docker
-                  dir
+                 dir
   * NEXUS-21878: failing to start one docker connector on startup prevents all
-                  other not started docker connectors from starting
+                 other not started docker connectors from starting
   * NEXUS-22125: Unable to query image tags via Registry API for proxied gcr.io
   * NEXUS-26970: Docker proxy repository returns 502 when remote returns 401
   * NEXUS-27033: Deploy of newly tagged multiarch manifest not permitted when
@@ -255,7 +260,7 @@ rm -rf $RPM_BUILD_ROOT
   * NEXUS-28717: "Docker - Delete unused manifests and images" task attempts to
                  read files from the wrong Blob Store.
   * NEXUS-28779: Use cases for name and type properties for datastores can be
-                  confusing
+                 confusing
   * NEXUS-29338: Image push after Nexus Repository upgrade not possible
 - Improvements:
   * NEXUS-24332: Optimized How Yum Metadata is Rebuilt
