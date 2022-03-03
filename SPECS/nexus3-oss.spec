@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.37.3.02
+Version: 3.38.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.37.3-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.38.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,111 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Mar  3 2022 Julio González Gil <packages@juliogonzalez.es> - 3.38.0.01-1
+- Update to Nexus 3.38.0-01
+- Bugfixes:
+  * NEXUS-30443: Fix for CVE-2021-43961 (HTML injection vulnerability).
+                 You should upgrade to this release immediately.
+  * NEXUS-20683: API: Searching requires permissions from role that can view
+                 every artifact returned in results (admin)
+  * NEXUS-24232: npm package metadata does not get updated when a package
+                 tarball is deleted
+  * NEXUS-24787: an anonymous docker pull while anonymous user is configured
+                 to use docker bearer token realm will permanently break all
+                 future anonymous docker logins
+  * NEXUS-25925: Cleanup policy criteria error if you enter a decimal rather
+                 than validate/disallow
+  * NEXUS-25927: Switching format errors on save if unapplicable criteria
+                 are applied
+  * NEXUS-26134: Password Validator Message not shown when changing
+                 your password
+  * NEXUS-26406: Cleanup Preview should inform the user results are a sample
+  * NEXUS-26799: Entering newlines in content selector expression text area
+  * NEXUS-27035: Cannot delete untouched Routing Rule matchers
+  * NEXUS-27512: Log spam when processing non-timestamped snapshots during
+                 metadata rebuild
+  * NEXUS-28009: Admin - Remove a member from a blob store group processes
+                 docker partial uploads
+  * NEXUS-28166: Yum metadata not refreshed because of relying on
+                 "metadata_generation_time"
+  * NEXUS-28446: Maven proxy repository will return 502 response instead of
+                 404 when manually blocked for content not yet cached
+  * NEXUS-28555: Upgrade from 2 -> 3 can migrate user email addresses that
+                 Nexus Repository 3 considers not valid
+  * NEXUS-28889: Some Debian Packages fail to upload (control.tar.zst)
+  * NEXUS-29151: IQ policy violations column displays "Loading" for
+                 non-admin user
+  * NEXUS-29227: WARN PoolBase Failed to validate connection
+                 org.postgresql.jdbc.PgConnection (This connection has
+                 been closed.). Possibly consider using a shorter
+                 maxLifetime value
+  * NEXUS-29408: npm group REST API missing when using Postgres/H2 database
+  * NEXUS-29410: DB migrator NotEnoughDiskSpaceException does not mention
+                 which location
+  * NEXUS-29417: Nexus DB migrator fails if asset name is not set/empty
+  * NEXUS-29465: Go-group returns 404 for all existing/proxied
+                 components (regression)
+  * NEXUS-29467: replication performance impacts due to frequent database
+                 transactions
+  * NEXUS-29477: deleting the current "latest" tgz version from an NPM hosted
+                 repo removes the latest tag instead of replacing it with
+                 newest published version
+  * NEXUS-29738: Maven checksum files should be able to be rebuilt even if
+                 repository disables redeploy
+  * NEXUS-30043: Yum hosted metadata cleanup causes IllegalStateException
+                 Missing entity-metadata when there are at least two
+                 hosted repositories
+  * NEXUS-30109: Repair - Reconcile component database from blob store task
+                 does not restore blobs created while running a different
+                 database type
+  * NEXUS-30153: Nexus Repository 3 may not be installable / upgradable if it
+                 uses PostgreSQL with non "public" schema
+  * NEXUS-30366: Routing rules not taking effect for docker when running with
+                 external db
+  * NEXUS-30448: Rebuilding maven-metadata.xml on slower PostgreSQL could take
+                 extremely long time
+  * NEXUS-30534: Docker Proxy S3 - Exception pulling pulling an image which
+                 has the same checksum as an existing image
+  * NEXUS-30687: Blob storage management screen no longer shows if blob store
+                 is in use
+  * NEXUS-30694: Sorting Maven components with Version returns unpredictable
+                 order in some cases
+  * NEXUS-30807: Nexus Repository fails to create user-token record when using
+                 PostgresDB for some users
+  * NEXUS-30834: Log4j Visualizer: log4j-core-2.16.0 is counted even though it
+                 doesn't have CVE-2021-44228
+  * NEXUS-30845: request log scanner for log4j visualizer may discard IO
+                 exceptions instead of logging them
+  * NEXUS-30847: Statistics - Recalculate vulnerabilities statistics task is
+                 scheduled to run at midnight which conflicts with
+                 log rotation
+  * NEXUS-30898: System - Repository Health Check task not deleted when the
+                 associated repository is deleted
+  * NEXUS-30911: 401 response from a remote docker registry will cause an
+                 already cached docker asset to be reported as 404 not found
+  * NEXUS-30912: Database upgrade to upgrade replication_connection schema
+                 does not trigger
+  * NEXUS-30934: Setting "NEXUS_SEARCH_INDEX_REBUILD_ON_STARTUP" environment
+                 variable does not rebuild indexes
+  * NEXUS-30978: Partial metadata generated for empty yum folder/path
+  * NEXUS-31035: Database Migrator health check reports "Cluster consistency
+                 error: null"
+  * NEXUS-31057: Pypi simple index should be proper HTML5 document to be
+                 PEP503 compliant and ready for pip version 22.2 and newer
+  * NEXUS-31233: Adjustments to Read-Only View
+- Improvements:
+  * System Status Check for NuGet Versions (PRO ony)
+  * Redesign of the replication: The current replication method will not be
+    supported after the new replication is released, later in 2022 (PRO only)
+  * Added GET Method to Repository Management API
+  * Expanded Assets API
+  * Apple M1 Chip Support for building
+  * NEXUS-28833: 'GitHub Packages' based npm proxy repos causes the long
+                 hashed tgz filename/path generation.
+  * NEXUS-29730: support for running on apple m1 chip
+  * NEXUS-30524: Yum cleanup policy support for "Asset Name Matcher" criteria
+  * NEXUS-30575: Expose 'Uploader ID' in API
+
 * Thu Dec 30 2021 Julio González Gil <packages@juliogonzalez.es> - 3.37.3.02-1
 - Update to Nexus 3.37.3-02
 - Bugfixes:
