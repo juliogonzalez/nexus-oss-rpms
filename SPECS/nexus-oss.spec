@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 2.15.0.04
+Version: 2.15.1.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://www.sonatype.org/downloads/%{name}-2.15.0-04-bundle.tar.gz
+Source0: http://www.sonatype.org/downloads/%{name}-2.15.1-02-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -165,6 +165,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Mar 24 2022 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.15.1-02-1
+- Update to 2.15.1-02
+- Bugfixes:
+  * Correct a regression introduce in 2.15.0 that prevented writing the request
+    log
+
 * Fri Mar 18 2022 Julio Gonzalez Gil <packages@juliogonzalez.es> - 2.15.0-04-1
 - Update to 2.15.0-04
 - Bugfixes:
