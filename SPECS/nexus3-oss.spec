@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.38.0.01
+Version: 3.38.1.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.38.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.38.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,21 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Mar 31 2022 Julio González Gil <packages@juliogonzalez.es> - 3.38.1.01-1
+- Update to Nexus 3.38.1-01
+- Bugfixes:
+  * NEXUS-31030: Cannot save edits to a blobstore with whitespace in the name
+  * NEXUS-31201: Running the Repair - Reconcile component database from blob
+                 store task on H2 or PostgreSQL databases no longer generates
+                 duplicate blobs
+  * Fix ea bug that prevented the Log4j Visualizer from rendering in 3.38.0
+- Improvements:
+  * Expanded Log4j Visualizer: Added a Log4j Consumption chart to help you see
+    if your organization's vulnerable log4j component consumption is trending
+    in the right direction
+  * Improvements to Policy-Compliant Component Selection for npm (PRO only)
+  * Upgraded PostgreSQL Driver from 42.2.25 to 42.3.3 (PRO only)
+
 * Thu Mar  3 2022 Julio González Gil <packages@juliogonzalez.es> - 3.38.0.01-1
 - Update to Nexus 3.38.0-01
 - Bugfixes:
