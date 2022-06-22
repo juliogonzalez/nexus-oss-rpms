@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.38.1.01
+Version: 3.39.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.38.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.39.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,81 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jun 22 2022 Julio González Gil <packages@juliogonzalez.es> - 3.39.0.01-1
+- Update to Nexus 3.39.0-01
+- Bugfixes:
+  * NEXUS-22810: Content selector creation REST API does not check for
+                 duplicates
+  * NEXUS-26811: Importing npm packages from Nexus Repository 2 to 3 should
+                 maintain dist-tags
+  * NEXUS-26846: "All format" cleanup policies disappear from repository
+                 assignments after editing
+  * NEXUS-28107: Repository Export allows to select a group repository,
+                 but shouldn't
+  * NEXUS-28910: Staging move operations for Maven rebuilds maven metadata for
+                 unrelated components resulting in extremely slow operations
+  * NEXUS-29421: Docker GC task may delete many layers if network/file system
+                 issues happened at the scheduled time
+  * NEXUS-29484: impossible to delete a specific npm package metadata root in
+                 some scenarios
+  * NEXUS-29502: 'CacheInfo missing for' / 'assuming stale content' WARNs
+                 written to the log when on PostgreSQL
+  * NEXUS-29639: "DataStoreNotFoundException: Data store not found: 'null'"
+                 from Rebuild repository search task
+  * NEXUS-29786: Nexus throw exception when id of proxy repository id is
+                 prefix of hosted one
+  * NEXUS-30477: RHC report URL does not include context-path
+  * NEXUS-30537: Repair - Rebuild repository search task fails with
+                 "java.lang.StringIndexOutOfBoundsException: String index out
+                 of range: 0"
+  * NEXUS-30840: Log4j Visualizer does not match request paths containing
+                 non-default webapp context or legacy repo 2 content paths
+  * NEXUS-30848: Recalculate vulnerabilities statistics task can trigger
+                 NullPointerException when reading log files
+  * NEXUS-30850: Default realm users that differ only by case break the user
+                 administration screen in new DB
+  * NEXUS-30882: The task "Statistics - recalculate vulnerabilities statistics"
+                 fails with a formatting exception on IPv6 values
+  * NEXUS-30997: "GET /nexus/service/extdirect/poll/rapture_State_get" takes
+                 longer when roles have many permissions
+  * NEXUS-31000: Possible race condition in reconcile component database from
+                 blob store task
+  * NEXUS-31229: /rest/v1/assets REST API may not find assets when using
+                 Postgresql database
+  * NEXUS-31299: Filter in cleanup policy preview causes "The filter is
+                 invalid so results could not be retrieved"
+  * NEXUS-31305: The "lastDownloaded" field is missing from component/asset
+                 REST API's when running under PostgreSQL
+  * NEXUS-31322: docker tags/list outbound paged request can consume all
+                 available outbound connections for the proxy repository
+  * NEXUS-31385: assets stored with empty path in a proxy repo are treated as
+                 auditable by repository healthcheck or firewall audit report
+  * NEXUS-31391: Migration to Postgres not preserving asset creation, update
+                 and download
+  * NEXUS-31395: Docker uploads serialized, can cause performance bottleneck
+  * NEXUS-31396: Requesting GA maven-metadata.xml checks all GAVs under
+                 the repository
+  * NEXUS-31501: Unused Content Selectors and duplicate permissions are used
+                 for the permission check
+  * NEXUS-31567: NuGet v3 thread cooperation exceptions on /index.json{}
+  * NEXUS-31573: Orient->Postgres DB migration does not update ID sequence
+  * NEXUS-31579: Conan search does not work if package name contains “-“
+  * NEXUS-31586: Docker - Delete unused manifests and images fails with
+                 "java.lang.IllegalStateException: Unit of work has not
+                 been set"
+  * NEXUS-31601: repository target patterns are migrated to content selectors
+                 with leading slash breaking the intended meaning
+  * NEXUS-31713: Repository Replication: Deleting an asset stops the
+                 replicator with NullPointerException
+  * NEXUS-31887: escalation: docker gc task query cannot finish even with
+                 large timeout on query
+- Improvements:
+  * NEXUS-11610: register Eclipse Jetty related JMX mbeans by default in Repo 3
+  * NEXUS-31071: Database backup tasks will no longer interrupt a long-running
+    "Repair: Reconcile component database from blob" storage task
+  * NEXUS-31198: Improved Resiliency/Disaster Recovery for File Blob Stores
+  * View Nexus, Audit, Cluster, and Task Logs in User Interface
+
 * Thu Mar 31 2022 Julio González Gil <packages@juliogonzalez.es> - 3.38.1.01-1
 - Update to Nexus 3.38.1-01
 - Bugfixes:
