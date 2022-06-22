@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.39.0.01
+Version: 3.40.0.03
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.39.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.40.0-03-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,27 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Jun 22 2022 Julio González Gil <packages@juliogonzalez.es> - 3.40.0.03-1
+- Update to Nexus 3.40.0-03
+- Bugfixes:
+  * NEXUS-26348: Maven Upload generates wrong xsd url
+  * NEXUS-26519: Cleanup Policy Notes field should be marked as optional
+  * NEXUS-26584: 'Security management: privileges' says id when it means name
+  * NEXUS-27494: Can't push image with oci mediatype
+  * NEXUS-29558: group repo with version policy RELEASE is selectable
+                 for Maven - Delete unused SNAPSHOT
+                 repository.maven.purge-unused-snapshots task
+  * NEXUS-31410: Search API returns null for "lastModified" field
+- Improvements:
+  * NEXUS-33297: Maven Metadata Rebuild Optimizations for
+                 SQL Databases (PRO only)
+                 If you must revert to the previous legacy SQL implementation,
+                 add the following line to
+                 /usr/share/nexus3/etc/nexus.properties:
+                 nexus.maven.datastore.legacy.rebuild=true
+  * Docker Subdomain Connector (PRO only)
+  * Upgrade Database Migrator to Spring 5.3.18
+
 * Wed Jun 22 2022 Julio González Gil <packages@juliogonzalez.es> - 3.39.0.01-1
 - Update to Nexus 3.39.0-01
 - Bugfixes:
