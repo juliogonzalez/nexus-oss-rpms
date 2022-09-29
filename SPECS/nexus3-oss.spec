@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.41.1.01
+Version: 3.42.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.41.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.42.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,40 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Sep 29 2022 Julio González Gil <packages@juliogonzalez.es> - 3.42.0.01-1
+- Update to Nexus 3.42.0-01
+- Bugfixes:
+  * NEXUS-31088: Helm proxy does not properly handle upstream UTF-8 characters
+  * NEXUS-31099: Manually scheduled tasks triggered after migration
+                 to Postgres
+  * NEXUS-31188: Nexus Firewall quarantined component returns 404 status
+                 through group repository instead of 403
+  * NEXUS-31891: Performance issue with "Download cataloged versions only" and
+                 "Download policy compliant versions" options
+  * NEXUS-32449: blobstore outbound http connection or file handle leak while
+                 rebuilding Helm index
+  * NEXUS-32453: Golang metadata in group repos is cached using component
+                 max age
+  * NEXUS-32529: Nexus upgrade can fail with NullPointerException at
+                 OrientBlobReconciliationLogMigrator stage.
+  * NEXUS-33294: Most of docker layer assets are filtered during
+                 postgresql migration
+  * NEXUS-33540: downloadUrl for assets in /rest/v1/search contain extra
+                 forward slash after migrating from OrientDB to PostgreSQL
+  * NEXUS-33917: NPM group repository does not return correct latest version
+  * NEXUS-33933: Nuget V3 search does not return the expected version against
+                 Hosted repository
+  * NEXUS-34184: log in audit.log components deleted by Cleanup service task
+  * NEXUS-34242: Elapsed time logged for scheduled tasks is using a time unit
+                 that is not human readable
+  * NEXUS-35082: Instance ID is not preserved during postgres migration
+  * NEXUS-35218: docker-nexus3 - memory settings no longer removed
+                 from nexus.vmoptions
+- Improvements:
+  * NEXUS-34932: Upgraded to Jetty 9.4.48.v20220622
+  * Improvement to Logs for Remove Quarantined Versions Feature (PRO only)
+  * Search performance improvements 
+
 * Thu Aug 25 2022 Julio González Gil <packages@juliogonzalez.es> - 3.41.1.01-1
 - Update to Nexus 3.41.1-01
 - Bugfixes:
