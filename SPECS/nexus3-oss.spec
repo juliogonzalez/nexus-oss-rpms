@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.42.0.01
+Version: 3.43.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.42.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.43.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,38 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Nov  8 2022 Julio González Gil <packages@juliogonzalez.es> - 3.43.0.01-1
+- Update to Nexus 3.43.0-01
+- Bugfixes:
+  * NEXUS-31672: Potentially long running query deleting components with
+                 repository.cleanup task
+  * NEXUS-34608: cleanup policies may cause PostgreSQL database connection
+                 pool exhaustion and prevent restarts
+  * NEXUS-34681: Blobstore Group Round Robin should try next blobstore member
+                 if one member if full
+  * NEXUS-34774: Some dependency packages are not downloaded via Nexus Nuget
+                 V3 repository
+  * NEXUS-34950: pypi package versions published using twine before upgrading
+                 to 3.41.0 or later are missing from /simple index preventing
+                 discovery by clients
+  * NEXUS-35259: PyPI INDEX type asset is always created by accessing it via
+                 group repo
+  * NEXUS-35492: INSTALL4J_ADD_VM_PARAMS do not override resiliency helm chart
+                 jvm arguments defined in nexus.vmoptions
+  * NEXUS-35515: Cannot cast DetachingList to ArrayList when retrieving Docker
+                 proxy repo configuration via REST API
+  * NEXUS-35530: Maven REPOSITORY_METADATA type asset is always created by
+                 accessing it via group repo
+  * NEXUS-36027: Admin - Cleanup unused asset blobs task may not be able to
+                 keep up with the number of newly created unused blobs
+- Improvements:
+  * NEXUS-25231: Nexus Repository Now Mirrors PyPI Yank Attribute (PEP 592)
+  * NuGet V2 Support for H2 and PostgreSQL Database Users (PRO only)
+  * Upgraded vulnerable Apache Shiro 1.9.1 to 1.10.0 (no reported exploits
+    so far
+  * Upgraded Jackson Databind from version 2.13.2.1 to 2.13.4.2
+  * Ugraded SnakeYAML from version 1.28 to 1.32
+
 * Thu Sep 29 2022 Julio González Gil <packages@juliogonzalez.es> - 3.42.0.01-1
 - Update to Nexus 3.42.0-01
 - Bugfixes:
