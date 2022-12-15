@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.43.0.01
+Version: 3.44.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.43.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.44.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,40 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Dec 15 2022 Julio González Gil <packages@juliogonzalez.es> - 3.44.0.01-1
+- Update to Nexus 3.44.0-01
+- Bugfixes:
+  * NEXUS-31363: Remove Quarantined Versions does not update asset
+                 attributes.content.etag
+  * NEXUS-31796: transitive repo group content privileges are not
+                 transparently applied to search results causing possible 403
+                 errors in the UI
+  * NEXUS-33553: Search API returns null for "lastDownloaded" field
+  * NEXUS-34508: Update Stream Filtering on BlobStoreGroupMemberRemovalTask
+  * NEXUS-34875: docker-nexus3: removal of chef dropped support for
+                  NEXUS_CONTEXT
+  * NEXUS-34950: PyPI package versions published using twine before upgrading
+                 to 3.41.0 or later are missing from /simple index preventing
+                 discovery by clients
+  * NEXUS-34969: "DatastoreFileBlobDeletionIndex - Processing blobstore" takes
+                 long time and block the startup
+  * NEXUS-35486: Unable to Upload npm package with long buildnumber
+  * NEXUS-35623: helm proxy fails with large index.yaml (bitnami)
+  * NEXUS-35867: Group Yum metadata merging failing with OutOfMemoryError in
+                 AbstractStringBuilder.hugeCapacity
+  * NEXUS-35995: Potentially long running query deleting components with
+                 repository.cleanup task due to fk_maven2_browse_node_component
+                 constraint
+  * NEXUS-36085: Task creation no longer works with group blob stores
+  * NEXUS-36154: database migrator may filter out valid components and assets
+                 due to "no repositoryId"
+- Improvements:
+  * Update the Log4J Visualizer user interface to provide new guidance on
+    integrating Nexus Firewall with Nexus Repository
+  * NEXUS-36180: add configurable cache buster for rapture web UI resources
+  * NEXUS-36232: prevent automatic search in the UI
+
+
 * Tue Nov  8 2022 Julio González Gil <packages@juliogonzalez.es> - 3.43.0.01-1
 - Update to Nexus 3.43.0-01
 - Bugfixes:
