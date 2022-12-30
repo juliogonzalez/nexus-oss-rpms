@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.44.0.01
+Version: 3.45.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.44.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.45.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,23 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Dec 30 2022 Julio González Gil <packages@juliogonzalez.es> - 3.45.0.01-1
+- Update to Nexus 3.45.0-01
+- Please note new PostgreSQL database user permission requirements introduced
+  as of 3.44.0 that impact your upgrade to 3.45.0. The PostgreSQL user must
+  have CREATE priveleges on the current database due to schema changes made
+  during the upgrade process that have new dependencies
+- Bugfixes:
+  * NEXUS-36046: roles ui call to backend is not sending x-nexus-ui request
+                 header
+  * NEXUS-36239: Multiple known issues can lead to data loss, so
+                 "Admin - Change repository blob store" is now disabled for
+                 your protection. All pre-existing tasks of this type will no
+                 longer run, and you will not be able to create new ones
+                 through either the user interface or API. Sonatype highly
+                 discourage you from using this task in earlier Nexus
+                 Repository releases where it is not disabled
+
 * Thu Dec 15 2022 Julio González Gil <packages@juliogonzalez.es> - 3.44.0.01-1
 - Update to Nexus 3.44.0-01
 - Bugfixes:
