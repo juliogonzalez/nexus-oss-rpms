@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.47.1.01
+Version: 3.48.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.47.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.48.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,8 +169,35 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Fri Feb 10 2023 Julio González Gil <packages@juliogonzalez.es> - 3.47.0.01-1
-- Update to Nexus 3.47.0-01
+* Tue Feb 28 2023 Julio González Gil <packages@juliogonzalez.es> - 3.48.0.01-1
+- Update to Nexus 3.48.0-01
+- Bugfixes:
+  * NEXUS-36573: create a repository of any format triggers a complete Helm
+                 index rebuild
+  * NEXUS-36998: dotnet add command against nuget v2 group repo is very slow
+                 on newDB
+  * NEXUS-37617: loading welcome page can make frequent calls to database
+                 which may lead to ui latency in some circumstances
+  * NEXUS-37810: strict content validation may fail on exe
+                 application/x-sharedlib protobuf protoc
+- Improvements:
+  * NEXUS-37535: Removed Legacy SQL Maven Metadata Builder
+  * Improved NuGet v2 Performance on PostgreSQL (PRO Only)
+  * New and improved Content Replication (PRO Only)
+    While help documentation for legacy replication remains available,
+    it will be unavailable for general use, and will be eventually removed.
+    Reach out to your CSE if you are still using legacy replication and
+    would like to continue using it
+- Notes:
+  After upgrading to 3.48.0, those using an H2 or PostgreSQL database will
+  need to run a task for each existing Apt, Helm, and Yum repository in
+  order to rebuild their metadata:
+  * Apt: Rebuild Apt metadata for each Apt repository
+  * Helm: Rebuild Helm metadata for each Helm repository
+  * Repair: Rebuild Yum rebuild metadata (repodata) for each Yum repository
+
+* Fri Feb 10 2023 Julio González Gil <packages@juliogonzalez.es> - 3.47.1.01-1
+- Update to Nexus 3.47.1-01
 - Bugfixes:
   * NEXUS-37325: MissingBlobException and slow downloads after upgrading
                  to 3.47.0
