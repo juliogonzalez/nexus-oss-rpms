@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.48.0.01
+Version: 3.49.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.48.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.49.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,31 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Mar  7 2023  Julio González Gil <packages@juliogonzalez.es> - 3.49.0.02-1
+- Update to Nexus 3.49.0-02
+- Bugfixes:
+  * NEXUS-30166: Error responses from roles REST API are not in
+                 consistent format
+  * NEXUS-30811: Staging move failing for multi-arch docker image due to NPE
+  * NEXUS-34600: Unable to add old privileges to role after migrating
+                 to postgresql
+  * NEXUS-36028: enable async batch deletes by default for Admin Cleanup
+                 unused asset blob tasks
+  * NEXUS-36244: Security Users view in the UI queries the database for all
+                 user role mappings in the entire database
+  * NEXUS-36296: Placing proxy repo in offline mode releases
+                 quarantined components
+  * NEXUS-36555: Component links in Browse UI delimit GAV paths with '%2F'
+                 instead of '/'
+  * NEXUS-36784: Regression: Download asset from UI, the filename contains
+                 group id with underscores and then the artifact name
+  * NEXUS-37385: db-migrator fails if the blob store name contains a colon
+  * NEXUS-37490: unable to download files when blobstore name contains colon
+                 after upgrading to 3.47
+- Improvements:
+  * Batch delete is now the default for the
+    "Admin - Cleanup unused asset blobs" task (PRO Only)
+
 * Tue Feb 28 2023 Julio González Gil <packages@juliogonzalez.es> - 3.48.0.01-1
 - Update to Nexus 3.48.0-01
 - Bugfixes:
