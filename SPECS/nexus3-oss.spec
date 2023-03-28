@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.49.0.02
+Version: 3.50.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.49.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.50.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,7 +169,48 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Tue Mar  7 2023  Julio González Gil <packages@juliogonzalez.es> - 3.49.0.02-1
+* Tue Mar 28 2023 Julio González Gil <packages@juliogonzalez.es> - 3.50.0.01-1
+- Update to Nexus 3.50.0-01
+- Bugfixing:
+  * NEXUS-22721: UI sign out/logout does not redirect to the default page
+  * NEXUS-25037: UNAVAILABLE repository status creates confusing user
+                 experiencie
+  * NEXUS-27530: proxying nested repodata/repomd.xml from remote YUM
+                 repositories causes automatic download attempt of
+                 primary.xml.gz at wrong remote path
+  * NEXUS-30939: New user token created every time a user clicks the
+                 Access token button
+  * NEXUS-33794: LogbackLogManager ERROR and WARN messages about missing log
+                 files lack context and log at the wrong level
+  * NEXUS-34022: Unable to unassign Routing Rules to a repository via Nexus UI
+  * NEXUS-35497: Staging move fails if some image layers are contained in a
+                 proxy repository
+  * NEXUS-36365: Blob store names can contain arbitrary characters and lack
+                 full validation leading to blobstores which cannot be used,
+                 deleted or accessed using REST API
+  * NEXUS-36590: Choco installs a different package when using Nuget V2
+                 with PostgreSQL
+  * NEXUS-36955: Checksum and size not updated in repomd.xml which can fail
+                 yum install due to checksum doesn't match
+  * NEXUS-37182: Conan search with hosted repo only works for the _ channel
+  * NEXUS-37315: conan search for hosted repository does not work when package
+                 has dependencies defined via 'requires'
+  * NEXUS-37454: group blobstore UI Transferred Items title lacks context
+  * NEXUS-37512: Format specific UI search returns results from
+                 different formats
+  * NEXUS-37563: conan hosted repo does not allow redeploying different
+                 configurations of the same package with disable
+                 redeploy option
+  * NEXUS-37895: Data Store UI shows required fields with possibly empty
+                 values that cannot be edited
+- Improvements:
+  * High availability deployment options with Amazon Web Services, Azure,
+    Kubernetes, or manual setup (PRO Only)
+  * Supports for Conan revisions for hosted repositories when using an H2
+    or PostgreSQL database (revisions are not supported
+    on OrientDB) (PRO Only)
+
+* Tue Mar  7 2023 Julio González Gil <packages@juliogonzalez.es> - 3.49.0.02-1
 - Update to Nexus 3.49.0-02
 - Bugfixes:
   * NEXUS-30166: Error responses from roles REST API are not in
