@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM docker.io/amazonlinux:2
 MAINTAINER Julio Gonzalez Gil <git@juliogonzalez.es>
 
 USER root
@@ -16,11 +16,12 @@ ADD files/* /opt/
 ARG DATE=None
 
 # Generate a list of original packages, update, install needed
-# packages and replace systemd
+# packages and replace systemd (requires procps-ng)
 RUN rpm -qa --qf "%{NAME}\n" > /opt/packages-image.txt && \
     yum -y -q update && \
     yum -y -q install \
-     java-1.8.0 \
+     java-1.8.0-openjdk \
+     procps-ng \
      systemd-sysv \
      rpm-build && \
     cp /opt/systemctl.py /usr/bin/systemctl && \

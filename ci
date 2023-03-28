@@ -18,6 +18,15 @@ TTY='-t'
 MAXRETRIES=20
 TIME_WAIT=10
 
+# Use podman by default as container engine
+CENGINE='podman'
+
+# Default registry
+REGISTRY='docker.io'
+
+# Default registry userspace, not configurable for now
+NAMESPACE='juliogonzalez'
+
 print_info() {
   echo -e "\033[1;36m[INFO] ${1}\033[0m"
 }
@@ -57,6 +66,9 @@ print_help() {
   echo ""
   echo "Optional arguments:"
   echo ""
+  echo "  --docker If present, docker will be used instead of podman"
+  echo "  --registry=<registry> Specify an image registry. If absent, docker.io"
+  echo "                        will be used by default"
   echo "  --max-retries=<RETRIES> Number of retries to check Nexus health."
   echo "                          By default 20"
   echo "  --time-wait=<SECONDS>   Time to wait between retries (by default 10)"
@@ -69,7 +81,7 @@ print_help() {
 }
 
 remove_container() {
-  docker container rm -f ${1}
+  ${CENGINE} container rm -f ${1}
 }
 
 exit_error() {
@@ -82,11 +94,11 @@ exit_error() {
   fi
 }
 
-docker_run() {
+container_run() {
   if [ ! -z ${3} ]; then
     local COMMAND_USER="-u ${3}"
   fi
-  local COMMAND="docker container exec -i ${TTY} ${COMMAND_USER} ${1} ${2}"
+  local COMMAND="${CENGINE} container exec -i ${TTY} ${COMMAND_USER} ${1} ${2}"
   local RESULT=$(${COMMAND})
   exit_error ${?}
   if [ "${RESULT}" != "" ]; then
@@ -95,7 +107,7 @@ docker_run() {
 }
 
 # read the options
-ARGS=$(getopt -o h --long help,remove-on-error,notty,distro:,nexus-major-ver:,max-retries:,time-wait:,name: -n "${SCRIPT}" -- "$@")
+ARGS=$(getopt -o h --long help,remove-on-error,notty,distro:,nexus-major-ver:,docker,registry:,max-retries:,time-wait:,name: -n "${SCRIPT}" -- "$@")
 if [ $? -ne 0 ];
 then
   print_incorrect_syntax
@@ -111,6 +123,8 @@ while true ; do
     --notty)           TTY=""; shift 1 ;;
     --distro)          DISTRO="${2}"; shift 2;;
     --nexus-major-ver) NEXUSMAJORVER="${2}"; shift 2;;
+    --docker)          CENGINE='docker'; shift 1;;
+    --registry)        REGISTRY="${2}"; shift 2;;
     --max-retries)     MAXRETRIES="${2}"; shift 2;;
     --time-wait)       TIME_WAIT="${2}"; shift 2;;
     --name)            CONTAINER_NAME="${2}"; shift 2;;
@@ -131,20 +145,23 @@ esac
 
 # Check distribution
 case "${DISTRO}" in
-  centos7)       DOCKER_IMAGE='juliogonzalez/centos7-nexus:latest'
-                 DOCKER_PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+  centos7)       IMAGE="${REGISTRY}/${NAMESPACE}/centos7-nexus:latest"
                  START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
-  amazon2018.03) DOCKER_IMAGE='juliogonzalez/amazon2018.03-nexus:latest'
+  amazon2018.03) IMAGE="${REGISTRY}/${NAMESPACE}/amazon2018.03-nexus:latest"
                  START_CMD="/etc/init.d/${PACKAGE_NAME} start";;
-  amazonlinux2)  DOCKER_IMAGE='juliogonzalez/amazonlinux2-nexus:latest'
-                 DOCKER_PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+  amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/amazonlinux2-nexus:latest"
                  START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
-  opensuse15.3)  DOCKER_IMAGE='juliogonzalez/opensuse15.3-nexus:latest'
-                 DOCKER_PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+  opensuse15.3)  IMAGE="${REGISTRY}/${NAMESPACE}/opensuse15.3-nexus:latest"
                  START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
   *)             print_error_unsupported_distro
                  exit 1;;
 esac
+
+if [ "${CENGINE}" == "podman" ]; then
+  PRIVILEGED="${PRIVILEGED} --userns=keep-id"
+else
+  PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+fi
 
 # Check name
 if [ -z ${CONTAINER_NAME} ]; then
@@ -152,21 +169,21 @@ if [ -z ${CONTAINER_NAME} ]; then
 fi
 
 print_info "Pulling latest image..."
-docker pull ${DOCKER_IMAGE}
+${CENGINE}  pull ${IMAGE}
 print_info "Starting container ${CONTAINER_NAME}..."
-docker container run -i ${TTY} ${REMOVE_ON_ERROR} --name "${CONTAINER_NAME}" ${DOCKER_PRIVILEGED} -v ${PWD}:/tmp/nexus-oss-rpms -w /tmp/nexus-oss-rpms -d ${DOCKER_IMAGE}
+${CENGINE}  container run -i ${TTY} ${REMOVE_ON_ERROR} --name "${CONTAINER_NAME}" ${PRIVILEGED} -v ${PWD}:/tmp/nexus-oss-rpms -w /tmp/nexus-oss-rpms -d ${IMAGE}
 print_info "Cleaning up"
-docker_run "${CONTAINER_NAME}" "./clean"
+container_run "${CONTAINER_NAME}" "./clean"
 print_info "Building nexus-oss package..."
-docker_run "${CONTAINER_NAME}" "./nexus-oss-rpm -v ${NEXUSMAJORVER}" "ci"
+container_run "${CONTAINER_NAME}" "./nexus-oss-rpm -v ${NEXUSMAJORVER}" "ci"
 print_info "Installing nexus-oss package..."
-docker_run "${CONTAINER_NAME}" "/bin/rpm -i RPMS/$HOSTTYPE/${PACKAGE_NAME}-*.*.$HOSTTYPE.rpm"
+container_run "${CONTAINER_NAME}" "/bin/rpm -i RPMS/$HOSTTYPE/${PACKAGE_NAME}-*.*.$HOSTTYPE.rpm"
 print_info "Starting nexus..."
-docker_run "${CONTAINER_NAME}" "${START_CMD}"
+container_run "${CONTAINER_NAME}" "${START_CMD}"
 print_info "Checking application (${MAXRETRIES} retries, ${TIME_WAIT} seconds between retries)..."
 RETRIES=0
 while [ ${RETRIES} -lt ${MAXRETRIES} ]; do
-  HTTP_CODE=$(docker_run "${CONTAINER_NAME}" "curl -s -o /dev/null -w %{http_code} ${NEXUS_URL}")
+  HTTP_CODE=$(container_run "${CONTAINER_NAME}" "curl -s -o /dev/null -w %{http_code} ${NEXUS_URL}")
   print_info "Status: ${HTTP_CODE}"
   if [ "${HTTP_CODE}" == "200" ]; then
     break
@@ -181,7 +198,7 @@ else
   exit_error 1
 fi
 print_info "Testing RPM removal..."
-docker_run "${CONTAINER_NAME}" "/bin/rpm -e ${PACKAGE_NAME}"
+container_run "${CONTAINER_NAME}" "/bin/rpm -e ${PACKAGE_NAME}"
 print_info "Removing container..."
 remove_container ${CONTAINER_NAME}
 print_ok "Everything is OK"

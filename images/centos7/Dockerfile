@@ -1,4 +1,4 @@
-FROM opensuse/leap:15.3
+FROM docker.io/centos:centos7
 MAINTAINER Julio Gonzalez Gil <git@juliogonzalez.es>
 
 USER root
@@ -18,16 +18,13 @@ ARG DATE=None
 # Generate a list of original packages, update, install needed
 # packages and replace systemd
 RUN rpm -qa --qf "%{NAME}\n" > /opt/packages-image.txt && \
-    zypper -q refresh && \
-    zypper -q -n update && \
-    zypper -q -n install \
-     curl \
+    yum -y -q update && \
+    yum -y -q install \
      java-1.8.0 \
-     python3 \
-     rpm-build \
-     systemd-sysvinit && \
-    cp /opt/systemctl3.py /usr/bin/systemctl && \
-    zypper -q clean -a # ${DATE}
+     systemd-sysv \
+     rpm-build && \
+    cp /opt/systemctl.py /usr/bin/systemctl && \
+    yum -q clean all # ${DATE}
 
 # Create ci group and user according to arguments UID/GID
 RUN groupadd -g ${GID} ci && \

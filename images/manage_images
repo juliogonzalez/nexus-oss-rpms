@@ -9,9 +9,18 @@ SCRIPT=$(basename ${0})
 # Supported distributions versions
 SUPPORTEDDISTROS="centos7 amazon2018.03 amazonlinux2 opensuse15.3"
 
-# Parameters for docker
+# Parameters for the image
 GID=$(id -G|cut -d' ' -f1)
 DATE=$(date +%Y%m%dT%H%M%s%N)
+
+# Use podman by default as container engine
+CENGINE='podman'
+
+# Default registry
+REGISTRY='docker.io'
+
+# Default registry userspace, not configurable for now
+NAMESPACE='juliogonzalez'
 
 help() {
   echo ""
@@ -29,9 +38,23 @@ help() {
   echo "    * update: will try to update the base image, and software images. Output tag"
   echo "              will be 'experimental'."
   echo "    * promote: will promote image(s) by removing tagging then as 'latest'."
-  echo "    * publish: will push current stable version to docker registry."
+  echo "    * publish: will push current stable version to the registry."
   echo " --distributions=<DISTRIBUTIONS>"
   echo "    Optional: A comma separated list of distributions (supported: $(echo ${SUPPORTEDDISTROS}|sed -e 's/ /, /g'))"
+  echo ""
+  echo "Mandatory arguments when --action=publish"
+  echo ""
+  echo " --username: Username to be used for the registry"
+  echo " --password: Password to be used for the registry"
+  echo ""
+  echo "Optional arguments:"
+  echo ""
+  echo " --docker If present, docker will be used instead of podman"
+  echo " --registry=<registry> Specify an image registry. If absent, docker.io will be used by default"
+  echo " --errorcodes If present, it will return the following exit codes:"
+  echo "              -1001 if there are updates for current image"
+  echo "              -1002 if there are updates for the parent image"
+  echo "              -1003 if there are updates for both current and parent images"
   echo ""
   exit 1
 }
@@ -49,9 +72,9 @@ check_updates() {
   local DISTRO="${2}"
   local VERSION="${3}"
   local CONTNAME="nexus-${DISTRO}"
-  docker run -i -u root --name ${CONTNAME} ${IMAGE_NAME} /opt/check_updates.sh
+  ${CENGINE} run -i -u root --name ${CONTNAME} ${IMAGE_NAME} /opt/check_updates.sh
   local UPDATES=${?}
-  docker rm ${CONTNAME} > /dev/null
+  ${CENGINE} rm ${CONTNAME} > /dev/null
   return  "${UPDATES}"
 }
 
@@ -64,11 +87,11 @@ update_image() {
     NOCACHE='--no-cache'
   fi
   local BASE_IMAGE=$(gawk 'match($0, /^FROM (.*)$/, a) {print a[1]}' ${BASE_DIR}/${DISTRO}/Dockerfile)
-  docker pull ${BASE_IMAGE}
-  docker build --pull --build-arg UID=${UID} --build-arg GID=${GID} --build-arg DATE=${DATE} ${NOCACHE} -t ${IMAGE_NAME} ${BASE_DIR}/${DISTRO}/
+  ${CENGINE} pull ${BASE_IMAGE}
+  ${CENGINE} build --pull --build-arg UID=${UID} --build-arg GID=${GID} --build-arg DATE=${DATE} ${NOCACHE} -t ${IMAGE_NAME} ${BASE_DIR}/${DISTRO}/
 }
 
-ARGS=$(getopt -o h --long help,action:,distributions: -n "${SCRIPT}" -- "$@")
+ARGS=$(getopt -o h --long help,action:,distributions:,docker,registry:,user:,password:,errorcodes -n "${SCRIPT}" -- "$@")
 if [ $? -ne 0 ];
 then
   print_incorrect_syntax
@@ -82,6 +105,11 @@ while true ; do
     -h|--help)       help; exit 1 ;;
     --action)        ACTION="${2}"; shift 2 ;;
     --distributions) DISTROS="${2}"; shift 2;;
+    --docker)        CENGINE='docker'; shift 1;;
+    --registry)      REGISTRY="${2}"; shift 2;;
+    --username)      USERNAME="${2}"; shift 2;;
+    --password)      PASSWORD="${2}"; shift 2;;
+    --errorcodes)    ERRORCODES='TRUE'; shift 1;;
     --)              shift ; break ;;
     *)               print_incorrect_syntax; exit 1 ;;
   esac
@@ -118,7 +146,7 @@ else
 fi
 
 for DISTRO in ${ADISTROS}; do
-  IMAGE_NAME="juliogonzalez/${DISTRO}-nexus:latest"
+  IMAGE_NAME="${REGISTRY}/${NAMESPACE}/${DISTRO}-nexus:latest"
   IMAGE_NAME_EXP="${IMAGE_NAME/:latest/:experimental}"
   if [ "${ACTION}" == "create" ]; then
     echo "================================================================================="
@@ -135,24 +163,29 @@ for DISTRO in ${ADISTROS}; do
     UPDATES=${?}
     if [ "${UPDATES}" == "0" ]; then
       echo "INFO: No updates available"
+      exit 0
     else
       if [ "${UPDATES}" == "2" -o "${UPDATES}" == "3" ]; then
         echo "INFO: Will try to get an updated base image"
       elif [ "${UPDATES}" == "1" -o "${UPDATES}" == "3" ]; then
-        echo "INFO: Update will include packages from the image"
+        echo "INFO: Update will include packages from the parent image"
       fi
       update_image ${IMAGE_NAME_EXP} ${DISTRO} ${VERSION} ${UPDATE_BASE}
+      if [ "${ERRORCODES}" == "TRUE" ]; then
+        exit -100${UPDATES}
+      fi
     fi
   elif [ "${ACTION}" == "promote" ]; then
     echo "================================================================================="
     echo " Promoting ${IMAGE_NAME_EXP} as:"
     echo "  ${IMAGE_NAME}"
     echo "================================================================================="
-    docker tag ${IMAGE_NAME_EXP} ${IMAGE_NAME}
+    ${CENGINE} tag ${IMAGE_NAME_EXP} ${IMAGE_NAME}
   elif [ "${ACTION}" == "publish" ]; then
     echo "================================================================================="
     echo " Publishing ${IMAGE_NAME}..."
     echo "================================================================================="
-    docker push ${IMAGE_NAME}
+    ${CENGINE} login --username "${USERNAME}" --password "${PASSWORD}" ${REGISTRY}
+    ${CENGINE} push ${IMAGE_NAME}
   fi
 done
