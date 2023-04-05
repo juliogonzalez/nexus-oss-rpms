@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.50.0.01
+Version: 3.51.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.50.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.51.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,38 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Apr  6 2023 Julio González Gil <packages@juliogonzalez.es> - 3.51.0.01-1
+- Update to Nexus 3.51.0-01
+- Bugfixing:
+  * NEXUS-31948: Attempting to create Azure blob store with an existing name
+                 causes 500 server error
+  * NEXUS-34077: scheduled tasks race condition during DB migration can leave
+                 tasks without proper schedule
+  * NEXUS-34599: Status API execution via Nexus Swagger UI returns
+                 Undocumented Error: OK
+  * NEXUS-35229: Reconcile task with last X days option checks all
+                 properties files
+  * NEXUS-35728: kubectl cp and oc cp commands work as expected.
+  * NEXUS-36296: Placing proxy repo in offline mode releases
+                 quarantined components
+  * NEXUS-36416: MissingBlobException for Nuget asset prevents instance
+                 from starting
+  * NEXUS-36817: Increase default size limit for helm yaml files
+  * NEXUS-37005: Blob store UI will not load if s3 blob store host can't
+                 be reached
+  * NEXUS-37639: Docker manifest upload to a docker hosted repository causes
+                 missing "Docker-Content-Digest" in the response when Nexus
+                 running with PostgreSQL db
+- Improvements:
+  * Automatically Rebuild Search Indexes for New High Availability
+    (HA) Deployments (PRO Only)
+  * UI/UX: Better error messaging when configuring Content (PRO only)
+  * UI/UX: Increasing the size of the routing rule preview field on the
+           routing rule form so that you can see the full path that you enter
+  * UI/UX: Continued conversion of parts of our UI to use React components
+           See https://help.sonatype.com/repomanager3/product-information/release-notes/2023-release-notes/nexus-repository-3.46.0-release-notes
+           for more information on this effort
+
 * Tue Mar 28 2023 Julio González Gil <packages@juliogonzalez.es> - 3.50.0.01-1
 - Update to Nexus 3.50.0-01
 - Bugfixing:
