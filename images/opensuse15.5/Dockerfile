@@ -1,4 +1,4 @@
-FROM docker.io/opensuse/leap:15.3
+FROM docker.io/opensuse/leap:15.5
 MAINTAINER Julio Gonzalez Gil <git@juliogonzalez.es>
 
 USER root
@@ -22,7 +22,7 @@ RUN rpm -qa --qf "%{NAME}\n" > /opt/packages-image.txt && \
     zypper -q -n update && \
     zypper -q -n install \
      curl \
-     java-1.8.0 \
+     java-1_8_0-openjdk \
      python3 \
      rpm-build \
      systemd-sysvinit && \

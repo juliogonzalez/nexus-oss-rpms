@@ -21,14 +21,14 @@ This repository holds files and scripts to build Sonatype Nexus 2.x and 3.x RPM 
 # Current state
 
 The SPEC is [verified to build](https://build.opensuse.org/project/show/home:juliogonzalez:devops), and the produce RPMs able to install on:
-- SLE12SP3-SP5 x86_64
-- SLE15GA-SP3 x86_64
-- openSUSE Leap 42.3 x86_64
-- openSUSE Leap 15.0-15.3 x86_64
+- SLE12 (supported SPs) x86_64
+- SLE15 (supported SPs) x86_64
+- openSUSE Leap 15.X (supported versions) x86_64
 - openSUSE Tumbleweed x86_64 
-- CentOS6-8 x86_64
-- RHEL6-8 x86_64
-- Fedora 30-33 x86_64
+- CentOS7 x86_64
+- AlmaLinux 8-9 x86_64
+- RHEL7-8 x86_64
+- Fedora (supported versions) x86_64
 - Fedora Rawhide x86_64
 
 
@@ -39,4 +39,4 @@ Besides, Nexus2/3 installations done by the RPMs are [verified to work](#build-s
 - CentOS7 x86_64
 - Amazon Linux 2018.03 x86_64
 - Amazon Linux 2 x86_64
-- openSUSE Leap 15.3 x86_64
+- openSUSE Leap 15.5 x86_64

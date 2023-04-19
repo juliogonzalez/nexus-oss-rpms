@@ -6,7 +6,7 @@ LANG=en_EN
 SCRIPT=$(basename ${0})
 
 # Supported distributions
-SUPPORTEDDISTROS='centos7 amazon2018.03 amazonlinux2 opensuse15.3'
+SUPPORTEDDISTROS='centos7 amazon2018.03 amazonlinux2 opensuse15.5'
 
 # Supported Nexus major versions
 NEXUSMAJORVERS='2 3'
@@ -151,7 +151,7 @@ case "${DISTRO}" in
                  START_CMD="/etc/init.d/${PACKAGE_NAME} start";;
   amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/amazonlinux2-nexus:latest"
                  START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
-  opensuse15.3)  IMAGE="${REGISTRY}/${NAMESPACE}/opensuse15.3-nexus:latest"
+  opensuse15.5)  IMAGE="${REGISTRY}/${NAMESPACE}/opensuse15.5-nexus:latest"
                  START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
   *)             print_error_unsupported_distro
                  exit 1;;

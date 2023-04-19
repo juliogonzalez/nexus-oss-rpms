@@ -7,7 +7,7 @@ LANG=en_EN
 SCRIPT=$(basename ${0})
 
 # Supported distributions versions
-SUPPORTEDDISTROS="centos7 amazon2018.03 amazonlinux2 opensuse15.3"
+SUPPORTEDDISTROS="centos7 amazon2018.03 amazonlinux2 opensuse15.5"
 
 # Parameters for the image
 GID=$(id -G|cut -d' ' -f1)
