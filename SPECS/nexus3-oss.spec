@@ -22,7 +22,7 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.51.0.01
+Version: 3.52.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.51.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.52.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -47,7 +47,8 @@ deployment, and provisioning.
 Among others, it can manage JAR or RPM artifactories inside mvn/ivy2 or yum
 repositories respectively
 
-Full sources are available at https://github.com/sonatype/nexus-public/archive/release-%{nversion}.tar.gz
+Full sources are available at
+https://github.com/sonatype/nexus-public/archive/refs/tags/release-%{nversion}.tar.gz
 
 %prep
 %setup -q -n nexus-%{nversion}
@@ -169,6 +170,28 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 19 2023 Julio González Gil <packages@juliogonzalez.es> - 3.52.0.01-1
+- Update to Nexus 3.52.0-01
+- Bugfixing:
+  * NEXUS-24266: Trim SAML UI Input Fields
+  * NEXUS-27453: The user ID field in "security --> anonymous" allows
+                 trailing spaces
+  * NEXUS-33918: Deleting tag via REST API UI returns "error: no content"
+  * NEXUS-34185: Nexus UI does not show 'Last downloaded' with full time and
+                 timezone details
+  * NEXUS-34566: Deleting an image tag deletes all tags with the same digest
+                 from other images
+  * NEXUS-34611: user-token-reset API execution in Nexus Swagger UI returns
+                 'Error: No Content'
+  * NEXUS-35509: Improve search performance with large Roles
+                 and Privileges: OrientDB
+  * NEXUS-36480: Improve robustness and logging for Null Pointer handling in
+                 Docker.GC task
+  * NEXUS-37491: Pypi proxy always does expensive rewrite of simple index pages
+  * NEXUS-38412: Resetting the nexus loggers to default levels causes
+                 "IllegalArgumentException: The level of the root logger
+                 cannot be set to null" with New HA deployments
+
 * Thu Apr  6 2023 Julio González Gil <packages@juliogonzalez.es> - 3.51.0.01-1
 - Update to Nexus 3.51.0-01
 - Bugfixing:
