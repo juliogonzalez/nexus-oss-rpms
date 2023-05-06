@@ -8,7 +8,7 @@ SCRIPT=$(basename ${0})
 # Supported distributions
 SUPPORTEDDISTROS='centos7 amazon2018.03 amazonlinux2 opensuse15.5'
 
-# Supported Nexus major versions
+# Supported Sonatype Nexus Repository major versions
 NEXUSMAJORVERS='2 3'
 
 # Allocate tty by default
@@ -48,7 +48,7 @@ print_error_unsupported_distro() {
 }
 
 print_error_unsupported_nexus_major_ver() {
-  print_error "Unsupported Nexus major version. Use ${SCRIPT} -h for help"
+  print_error "Unsupported Sonatype Nexus Repository major version. Use ${SCRIPT} -h for help"
 }
 
 print_help() {
@@ -69,8 +69,8 @@ print_help() {
   echo "  --docker If present, docker will be used instead of podman"
   echo "  --registry=<registry> Specify an image registry. If absent, docker.io"
   echo "                        will be used by default"
-  echo "  --max-retries=<RETRIES> Number of retries to check Nexus health."
-  echo "                          By default 20"
+  echo "  --max-retries=<RETRIES> Number of retries to check Sonatype Nexus"
+  echo "                          Repository health. By default 20"
   echo "  --time-wait=<SECONDS>   Time to wait between retries (by default 10)"
   echo "  --name=<CONTAINER_NAME> Define the container name"
   echo "                          If undefined, container name will be"
@@ -192,7 +192,7 @@ while [ ${RETRIES} -lt ${MAXRETRIES} ]; do
   sleep ${TIME_WAIT}
 done
 if [ "${HTTP_CODE}" == "200" ]; then
-  print_info "Nexus is healty"
+  print_info "Sonatype Nexus Repository is healty"
 else
   print_error "Could not verify application after ${MAXRETRIES} retries. Last HTTP error was ${HTTP_CODE}!"
   exit_error 1

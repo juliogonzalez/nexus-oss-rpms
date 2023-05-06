@@ -6,8 +6,8 @@ To build the RPM:
 - tar
 - gz
 
-To run Nexus:
-- OpenJDK JRE 1.8 installed (no other Java versions are supported by Nexus 3 right now)
+To run Sonatype Nexus Repository:
+- [OpenJDK JRE 1.8 installed](https://help.sonatype.com/repomanager2/system-requirements) (no other Java versions are supported by Sonatype Nexus Repository right now)
 
 # How to build
 
@@ -16,14 +16,14 @@ To run Nexus:
 ```
 # Daemon
 
-Nexus configuration has been customized, so Nexus behaves more like a
-"real" daemon, listening at port 8081 (you can change it at
+Sonatype Nexus Reposutory configuration has been customized, so it behaves
+more like a "real" daemon, listening at port 8081 (you can change it at
 /etc/nexus/nexus.properties).
 
 The RPM will create a user called 'nexus' to run Nexus OSS.
 
-Nexus will not be configured to start automatically on boot and will
-not even start after installation.
+Sonatype Nexus Repository will not be configured to start automatically on
+boot and will not even start after installation.
 
 You can do both things by running:
 

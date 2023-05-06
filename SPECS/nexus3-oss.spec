@@ -19,10 +19,10 @@
 %define use_systemd 1
 %endif
 
-Summary: Nexus manages software "artifacts" and repositories for them
+Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.52.0.01
+Version: 3.53.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.52.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.53.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -41,8 +41,8 @@ Requires: systemd
 AutoReqProv: no
 
 %description
-Nexus manages software "artifacts" and repositories required for development,
-deployment, and provisioning.
+Sonatype Nexus Repository manages software "artifacts" and repositories
+required for development, deployment, and provisioning.
 
 Among others, it can manage JAR or RPM artifactories inside mvn/ivy2 or yum
 repositories respectively
@@ -170,6 +170,49 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat May  6 2023 Julio González Gil <packages@juliogonzalez.es> - 3.53.0.01-1
+- Update to Nexus 3.53.0-01
+- Bugfixing:
+                performance issues installing gems
+  * NEXUS-20429: incomplete gem metadata returned sometimes from
+                /api/v1/dependencies
+  * NEXUS-25408: Using 0 in "Authenticated user status interval" disables
+                 buttons after logging in
+  * NEXUS-31023: npm metadata request fails with "Missing blob and no handler
+                 set to recover"
+  * NEXUS-31286: nexus.datastore system properties do not overwrite values in
+                 nexus-store.properties file
+  * NEXUS-31635: Repository REST API allows invalid version policy value for
+                 Maven repo
+  * NEXUS-35728: New Nexus Repository Manager 3 image breaks "kubectl cp" and
+                 "oc cp" commands
+  * NEXUS-37958: Blob store health check fails reporting group blobstores as
+                 not writable
+  * NEXUS-38452: RubyGems.org /api/v1/dependencies API removal may cause empty
+                 200 status responses from groups which can then fail builds
+  * NEXUS-38579: Expensive search done for deleted assets after repository
+                 is removed
+  * NEXUS-38585: Conan hosted repo search does not return all deployed
+                 components when conan attributes contain special characters
+                 and using elasticsearch indexing
+  * Upgraded org.apache.karaf.jaas:org.apache.karaf.jaas.modules package from
+    4.3.6 to 4.3.9 due to a vulnerability. There are no known exploits of this
+    vulnerability, so the this upgrade happens out of an abundance of caution
+- Improvements:
+  * NEXUS-31225: Add support for rubygems compact_index /info/<gem> endpoint
+  * Change in Database Property Evaluation Priority when Using
+    PostgreSQL (PRO Only)
+    To help you more easily change database connection details, there are
+    changes in the way and order in which Sonatype Nexus Repository evaluates
+    the mechanism for evaluating this information. You will also need to
+    provide all required fields through the same mechanism
+  * Fix for RubyGems Dependency API Deprecation: RubyGems will deprecate its
+    dependency API as of May 10, 2023. Those using RubyGems will need to
+    upgrade to Sonatype Nexus Repository 3.53.0 by May 10 to avoid
+    encountering errors caused by this deprecation
+  * New Name (Sonatype Nexus Repository) & UI Changes. Functionality is
+    not impacted
+
 * Wed Apr 19 2023 Julio González Gil <packages@juliogonzalez.es> - 3.52.0.01-1
 - Update to Nexus 3.52.0-01
 - Bugfixing:
