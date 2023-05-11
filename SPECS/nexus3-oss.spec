@@ -23,7 +23,7 @@ Summary: Sonatype Nexus Repository manages software "artifacts" and repositories
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 3.53.0.01
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -170,6 +170,16 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu May 11 2023 Julio González Gil <packages@juliogonzalez.es> - 3.53.0.01-2
+- There is a known issue in Sonatype Nexus Repository 3.53.0 impacting those
+  using community or custom plugins. These plugins will not load from the
+  typical install directory and, in some cases, this may prevent Sonatype
+  Nexus Repository from starting.
+  If you are using community or custom plugins and wish to upgrade,
+  remove the plugin before doing so. Otherwise, wait to upgrade until a fix
+  is released this issue.
+  If you are not using community or custom plugins, upgrading is safe
+
 * Sat May  6 2023 Julio González Gil <packages@juliogonzalez.es> - 3.53.0.01-1
 - Update to Nexus 3.53.0-01
 - Bugfixing:
