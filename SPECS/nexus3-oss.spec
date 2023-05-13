@@ -22,15 +22,15 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.53.0.01
-Release: 2%{?dist}
+Version: 3.53.1.02
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.53.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.53.1-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,34 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat May 13 2023 Julio González Gil <packages@juliogonzalez.es> - 3.53.1.02-1
+- Bugfixing:
+  * NEXUS-39091: Concurrent event handling and asynchronous processing works
+                 as expected for RubyGems
+  * Fixed an issue that was causing the RubyGems Info API to work with
+    incorrect groups
+  * Fixed a paging issue on OrientDB for RubyGems upgrade tasks
+  * Fixed a GroovyCastException that was occurring when installing the
+    nexus gem
+  * Resolved an issue for those using OrientDB where, if a package was
+    uploaded while a rebuild was in progress, it may result in missing a
+    package until the next upload
+  * Fixed an issue that was causing an exception when running the
+    "Repair - Rebuild Rubygems versions file" task
+- It is possible that you may still encounter issues related to the RubyGems
+  Dependencies API deprecation even after upgrading to 3.53.1
+  Sonatype observed packaging inconsistencies in the RubyGems ecosystem that
+  leave required fields missing or with values that are non-conforming to spec
+  In these scenarios, Sonatype Nexus Repository is unable to properly store the
+  gem or complete normal operations
+  In 3.53.0 and earlier, this error would occur with a 500 error and not
+  enough data being provided in the log file to identify the specific gem
+  In 3.53.1, gems that have this gap will be reported in the "nexus.log" file
+  with a log line like the following:
+    2023-05-12 12:20:32,043-0500 WARN [quartz-11-thread-2] *SYSTEM org.sonatype.nexus.repository.rubygems.orient.internal.hosted.OrientGemInfoHostedFacet - Could not parse version 0.2.2 from gem gems/nexus-0.2.2.gem 
+  Please report such problems to Sonatype so they can properly address
+  non-conforming gems in future releases
+
 * Thu May 11 2023 Julio González Gil <packages@juliogonzalez.es> - 3.53.0.01-2
 - There is a known issue in Sonatype Nexus Repository 3.53.0 impacting those
   using community or custom plugins. These plugins will not load from the
