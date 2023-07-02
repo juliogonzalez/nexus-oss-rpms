@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.53.1.02
+Version: 3.54.1.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.53.1-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.54.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,33 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Jul  2 2023 Julio González Gil <packages@juliogonzalez.es> - 3.54.1.01-1
+- Update to Nexus 3.54.1-01
+- Bugfixing:
+  * Added recently provided patch fixing the GroovyCastException that was
+    occurring when installing the nexus gem
+  * Fixed the known issue from 3.53.0 for those using community or custom
+    plugins. These plugins now load as expected.
+  * Added validation so that users can only add valid content selector
+    privileges
+  * NEXUS-37518: Fixed an issue that was causing errors when running the
+                 "Docker - Delete unused manifests and images" task
+  * NEXUS-38740: Fixed an issue that was preventing NuGet v3 search from
+                 returning components with ".<numeral>" in the component name
+                 under some search conditions
+  * Plugins bundled as .kar files that are installed via $install-dir/deploy
+    now start as expected
+  * Updated documentation to better explain how metadata is impacted during
+    repository import
+- Improvements:
+  * Refreshed Outreach Page
+  * Export Unused Assets (PRO Only)
+  * The IQ Audit and Quarantine capability was renamed to Firewall Audit and
+    Quarantine and hidden the IQ Server Configuration capability from the
+    Capabilities screen. Functionality is not impacted, and you will still
+    configure your connection to IQ Server via the IQ Server tab in the
+    user interface
+
 * Sat May 13 2023 Julio González Gil <packages@juliogonzalez.es> - 3.53.1.02-1
 - Update to Nexus 3.53.1-02
 - Bugfixing:
