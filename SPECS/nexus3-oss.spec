@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.55.0.01
+Version: 3.56.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.55.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.56.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,38 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jul  3 2023 Julio González Gil <packages@juliogonzalez.es> - 3.56.0.01-1
+- Update to Nexus 3.56.0-01
+- Bugfixing:
+  * The Repair - Rebuild npm metadata task now rebuilds npm package metadata
+    as expected
+  * When migrating from Sonatype Nexus Repository 2 to 3, broken NuGet assets
+    will no longer prevent completing migration. Sonatype Nexus Repository
+    will provide an error message and log an exception for broken
+    NuGet assets. Migration will continue and Sonatype Nexus Repository 3 will
+    migrate valid NuGet assets as expected
+  * Enabling the IQ: Audit and Quarantine capability in Sonatype Nexus
+    Repository 2 will no longer cause migration to Sonatype Nexus
+    Repository 3 to hang
+  * PyPI simple index is rebuilt as expected after a staging move
+  * Repositories already using a blobstore that is then promoted to a group
+    blobstore will continue to function as expected
+  * Performing "conan search zlib/*" on a hosted repository in a high
+    availability environment works as expected
+  * Calling "info/rater_pdf" only returns versions of the rater_pdf gem
+    as expected
+- Improvements:
+  * Search Improvement for High Availability (HA) Enviornments (PRO Only)
+    To ensure you receive the most accurate and usable information, a small
+    aspect of component search was changed for those using one of our HA
+    deployment options. You will now see the latest modification date from
+    among all asset blobs assigned to a component in the Last Updated column.
+    Previously, the component's creation date appeared in this column
+  * In order to prevent unreasonable wait times, a 1-minute timeout was added
+    to the Cleanup Policy preview feature
+
+AWs me-central-1 region now appears as an option when creating an S3 blobstore.
+
 * Sun Jul  2 2023 Julio González Gil <packages@juliogonzalez.es> - 3.55.0.01-1
 - Update to Nexus 3.55.0-01
 - Bugfixing:
