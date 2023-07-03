@@ -1,3 +1,7 @@
+# Buy me a beer
+
+If you find this repository useful, you can [Buy me a beer](https://www.buymeacoffee.com/juliogonzalez) 🍺
+
 # Build status
 
 - Sonatype Nexus Repository 2: [![Build Status](https://jenkins.juliogonzalez.es/job/nexus2-oss-rpms-build/badge/icon)](https://jenkins.juliogonzalez.es/job/nexus2-oss-rpms-build/)
