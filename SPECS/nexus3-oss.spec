@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.56.0.01
+Version: 3.57.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.56.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.57.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,59 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Jul  7 2023 Julio González Gil <packages@juliogonzalez.es> - 3.57.0.01-1
+- Update to Nexus 3.57.0-01
+- Bugfixing:
+  * NEXUS-24088: You can now properly remove an S3 blob store from a group
+                 even when it references an S3 bucket that is no
+                 longer accessible; such blob stores no longer cause UI errors
+  * NEXUS-24726: You can now search for components with an empty group
+                 or npm.scope
+  * NEXUS-27710: Fixed errors that were sporadically preventing startup in
+                 some cases due to a corrupted
+                 org.apache.karaf.features.cfg file
+  * NEXUS-29638: Downloading a pom.xml that uses unicode characters no longer
+                 fails due to calling getBytes without using UTF8
+  * NEXUS-31461: Searching for Maven versions now returns versions in
+                 alpha-numeric order as expected
+  * NEXUS-31492: Raw proxy URL no longer encodes special characters for
+                 outbound requests
+  * NEXUS-35917: The Repair - Reconcile component database from blob store
+                 task with only Integrity Check option selected now removes
+                 stale objects from S3 blob stores as expected
+  * NEXUS-36599: Browse privileges are no longer required to execute a
+                 NuGet search; only Read is needed
+  * NEXUS-38662: Deleting large repositories is no longer impeded by errors
+                 where Sonatype Nexus Repository looks for
+                 repository_blobstore in the component database
+  * NEXUS-38791: Running a search for Maven assets in an HA environment now
+                 returns the versions in descending order
+  * NEXUS-38851: npm exports no longer skip assets with an application/x-tgz
+                 content type
+  * NEXUS-39169: The permissions required for the search API are now
+                 consistent between HA and non-HA environments. Searching a
+                 group repository from the API only requires the user to have
+                 read permissions for the group
+- Improvements:
+  * Added a Default Role alert to inform administrators when the Default Role
+    capability is enabled and what role is configured as the default role
+    granted to all authenticated users
+  * Multiple UX enhancements, including a new Blob Store column in the
+    Repositories table and a sortable Last Updated column to Search results
+  * Improvements in Support of Sonatype Repository Firewall to ensure HA
+    Sonatype Nexus Repository deployments can support the new Sonatype
+    Repository Firewall SaaS offering. Added validation to ensure that
+    Sonatype Nexus Repository and Firewall only exchange information when
+    Firewall configuration is enabled to avoid data becoming out of syn
+    Renamed the Component IQ and IQ Application fields in the component browse
+    view to Sonatype Lifecycle Component and Application respectively
+    Modified the policy-compliant component selection checkbox so that it is
+    disabled until and unless both the Firewall - Audit and Quarantine
+    capability is enabled and the Enable Quarantine checkbox that appears
+    within that capability is checked. This is to prevent Sonatype Nexus
+    Repository from getting into an inconsistent state with the
+    Firewall server
+
 * Mon Jul  3 2023 Julio González Gil <packages@juliogonzalez.es> - 3.56.0.01-1
 - Update to Nexus 3.56.0-01
 - Bugfixing:
