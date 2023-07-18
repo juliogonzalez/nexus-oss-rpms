@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.57.0.01
+Version: 3.58.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.57.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.58.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,19 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jul 18 2023 Julio González Gil <packages@juliogonzalez.es> - 3.58.0.01-1
+- Update to Nexus 3.58.0-01
+- Bugfixing:
+  * NEXUS-39766: Docker Subdomain connectors work with nGrok again as expected
+  * NEXUS-39415: Added logging for and made "Rubygems - Generate SHA256
+                 Checksums and Repair - Update attributes for RubyGems"
+                 tasks configurable via the user interface. See the Tasks
+                 documentation for details on these tasks
+- Improvements:
+  * Restored "Admin - Change repository blob store"Task for deployments using
+    PostgreSQL or H2, after it got disabled in 3.45.0, due to multiple issues
+    that could result in data loss (PRO  Only)
+
 * Fri Jul  7 2023 Julio González Gil <packages@juliogonzalez.es> - 3.57.0.01-1
 - Update to Nexus 3.57.0-01
 - Bugfixing:
