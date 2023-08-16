@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.58.1.01
+Version: 3.59.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.58.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.59.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,42 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Aug 16 2023 Julio González Gil <packages@juliogonzalez.es> - 3.59.0.01-1
+- Update to Nexus 3.59.0-01
+- Bugfixing:
+  * Apache shiro upgraded from 1.10.0 to 1.12.0 to mitigate CVE-2023-34478
+  * SnakeYaml upgraded from 1.33 to 2.0 to mitigate CVE-2022-1471
+  * Sonatype recently became aware of a bug impacting those using user tokens
+    for authentication. To address potential security concerns, user token
+    authentication methods were enhanced to ensure that user tokens are always
+    case-sensitive regardless of security realm or database used
+  * NEXUS-39797: Resolved an issue that was causing some components to not be
+                 indexed for search in HA deployments
+  * NEXUS-39774 & 39573: Using the Search API to return Maven assets with an
+                         empty maven.classifier now works as expected
+  * NEXUS-39255 The Conan v2 remote list command to retrieve revisions
+                performs as expected without a 500 error
+  * NEXUS-36486 The blobCreated date is now preserved when migrating
+                to PostgreSQL
+  * NEXUS-36415 Adjusted handling in cases where invalid content violating
+                metadata format is cached in a proxy repository
+  * NEXUS-35977 Improved error messaging and documentation related to
+                requesting files from a R format repository. See our updated
+                R repositories documentation for supported file types
+- Improvements:
+  * Support for password encoders like SHA-256, SHA-384, and SHA-512 for those
+    using LDAP authentication
+  * To help facilitate debugging outbound network problems, an outbound
+    request log that generates an outbound-request.log file in the
+    $data-dir/log directory is now provided. The outbound request log rotates
+    daily, maintains 90 days of log files by default, and compresses
+    old logs. The log includes information such as date/time, authenticated
+    user id, method, url, response status code, bytes sent, bytes received,
+    and response time
+  * To help troubleshoot content selector issues, the audit log
+    ($data-dir/log/audit/audit.log) is now expanded to log content selector
+    creation, update, or deletion
+
 * Tue Jul 25 2023 Julio González Gil <packages@juliogonzalez.es> - 3.58.1.01-1
 - Update to Nexus 3.58.1-01
 - Bugfixing:
