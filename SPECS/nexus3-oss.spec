@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.59.0.01
+Version: 3.60.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.59.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.60.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,37 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Sep  8 2023 Julio González Gil <packages@juliogonzalez.es> - 3.60.0.02-1
+- Update to Nexus 3.60.0-02
+- Bugfixing:
+  * NEXUS-40141: Fixed the previously reported "Repair - Reconcile component
+                 database from blob store task" issue. The bug caused the task
+                 to soft-delete the blob .properties and .bytes files for
+                 NuGet v2 proxy and hosted repositories. It also failed to
+                 restore the desired content for RubyGems, NuGet v2 (proxy or
+                 hosted), or P2 repositories; however, there was no soft
+                 deletion associated with RubyGems or P2 repositories
+  * NEXUS-39918: Clarified search restrictions in high availability
+                 environments to explain that searches cannot begin with a
+                 special character followed by a wildcard. Attempts to perform
+                 such seareches will now result in  appropriate descriptive
+                 messaging
+  * NEXUS-39825: NuGet v3 search now returns the complete list of component
+                 versions even when the component name has a dot after a digit
+  * NEXUS-38670: Improved Apt upload performance and speed
+  * NEXUS-37537: The lastDownloaded attribute for hosted Helm assets now
+                 updates as expected in deployments using PostgreSQL or H2
+  * NEXUS-37024: The Global Webhook capability with Audit Type now works
+                 as expected
+- Improvements:
+  * Support for Cocoapods Stored on Google Open Source
+  * Refactored caching for deployments using Atlassian Crowd to improve
+    performance and avoid calls to Crowd Server every time user information
+    is needed. This refactoring also enables caching and improves performance
+    for formats using bearer token realms (i.e., Conan, Docker, and
+    npm formats). You must enable the Crowd realm for this to
+    take effect (PRO Only)
+
 * Wed Aug 16 2023 Julio González Gil <packages@juliogonzalez.es> - 3.59.0.01-1
 - Update to Nexus 3.59.0-01
 - Bugfixing:
