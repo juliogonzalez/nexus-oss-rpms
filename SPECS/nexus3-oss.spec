@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.60.0.02
+Version: 3.61.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.60.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.61.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -170,6 +170,44 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Oct  4 2023 Julio González Gil <packages@juliogonzalez.es> - 3.61.0.02-1
+- Update to Nexus 3.61.0-02
+- Bugfixing:
+  * NEXUS-40135: Fixed an issue that was causing upgrade errors to 3.59.0 or
+                 3.60.0 when user tokens existed in earlier Sonatype Nexus
+                 Repository versions with the exact same user ID but different
+                 principals (security realms). Noted as a known issue in
+                 3.59.0 and 3.60.0
+  * NEXUS-39995: Resolved an issue that was preventing administrator users
+                 from generating support zips
+  * NEXUS-39973: Fixed an issue that was causing Docker proxy or group
+                 repositories to return a 404 error even though the remote
+                 returned the correct manifest
+  * NEXUS-39624: The task for migrating the blobRef assets field now handles
+                 blob_ref duplicates correctly
+  * NEXUS-38800: AssetBlobCleanupTask now works as expected; the number of
+                 threads eventually stays around the same number as expected
+  * NEXUS-38530: Blob store metrics now update as expected after HA migration
+  * NEXUS-38292: Improved repository import task memory efficiency so that
+                 imports will not fail with out-of-memory errors even with
+                 large import sets
+  * NEXUS-36697: Made changes to the Admin - Delete blob store temporary files
+                 task to prevent it accidentally deleting in-use tmp files
+  * NEXUS-23185: Made improvements for those using Sonatype Nexus Repository
+                 with Sonatype Repository Firewall to prevent overloading IQ
+                 Server with asset deletion requests
+- Improvements:
+  * New OpenShift Operator for PostreSQL and High Availability
+    Deployments (PRO Only)
+  * Change Repository Blobstore Task Supports Proxy Repositories (PRO Only)
+  * Policy-Compliant Component Selection for PyPI (PRO Only)
+  * Azure Blob Store Performance Improvements (PRO Only)
+  * Sonatype Nexus Repository Usage Metrics (not currently available for
+    High Availability deployments)
+  * Improved Security When Specifying Credentials as JVM Arguments.
+    Ensure that sensitive credentials are always masked in any location where
+    they may appear
+
 * Fri Sep  8 2023 Julio González Gil <packages@juliogonzalez.es> - 3.60.0.02-1
 - Update to Nexus 3.60.0-02
 - Bugfixing:
