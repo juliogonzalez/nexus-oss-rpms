@@ -174,7 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Thu Oct 12 2023 Julio González Gil <packages@juliogonzalez.es> - 3.61.0.02-2
+* Thu Oct 12 2023 J. Daniel Schmidt <opensuse@jdsn.de> - 3.61.0.02-2
 - Fix the macro for the service removal so the package builds again for
   openSUSE Tumbleweed and Factory
 
