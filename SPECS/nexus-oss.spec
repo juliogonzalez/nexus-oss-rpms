@@ -23,7 +23,7 @@ Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 2.15.1.02
-Release: 2%{?dist}
+Release: 3%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -121,7 +121,11 @@ fi
 %preun
 %if 0%{?use_systemd}
 %if 0%{?suse_systemd}
+%if 0%{?suse_version} > 1500
+%service_del_postun_without_restart %{name}.service
+%else
 %service_del_preun %{name}.service
+%endif
 %endif
 %if 0%{?redhat_systemd}
 %systemd_preun %{name}.service
@@ -165,6 +169,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 12 2023 Julio González Gil <packages@juliogonzalez.es> - 2.15.1-02-3
+- Fix the macro for the service removal so the package builds again for
+  openSUSE Tumbleweed and Factory
+
 * Fri Aug 26 2022 Julio González Gil <packages@juliogonzalez.es> - 2.15.1-02-2
 - Update the URL for the sources, as the previous one returns a HTTP 503
 
