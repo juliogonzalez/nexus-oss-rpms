@@ -121,11 +121,7 @@ fi
 %preun
 %if 0%{?use_systemd}
 %if 0%{?suse_systemd}
-%if 0%{?suse_version} > 1500
-%service_del_postun_without_restart %{name}.service
-%else
 %service_del_preun %{name}.service
-%endif
 %endif
 %if 0%{?redhat_systemd}
 %systemd_preun %{name}.service
@@ -143,7 +139,11 @@ fi
 %systemd_postun %{name}.service
 %endif
 %if 0%{?suse_systemd}
+%if 0%{?suse_version} > 1500
+%service_del_postun_without_restart %{name}.service
+%else
 %service_del_postun -n %{name}.service
+%endif
 %endif
 
 %clean
