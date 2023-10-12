@@ -23,7 +23,7 @@ Summary: Sonatype Nexus Repository manages software "artifacts" and repositories
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 3.61.0.02
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -140,7 +140,11 @@ fi
 %systemd_postun %{name}.service
 %endif
 %if 0%{?suse_systemd}
+%if 0%{?suse_version} > 1500
+%service_del_postun_without_restart %{name}.service
+%else
 %service_del_postun -n %{name}.service
+%endif
 %endif
 
 %clean
@@ -170,6 +174,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 12 2023 J. Daniel Schmidt <opensuse@jdsn.de> - 3.61.0.02-2
+- Fix the macro for the service removal so the package builds again for
+  openSUSE Tumbleweed and Factory
+
 * Wed Oct  4 2023 Julio González Gil <packages@juliogonzalez.es> - 3.61.0.02-1
 - Update to Nexus 3.61.0-02
 - Bugfixing:
