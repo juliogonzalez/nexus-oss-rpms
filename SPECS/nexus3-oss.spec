@@ -23,7 +23,7 @@ Summary: Sonatype Nexus Repository manages software "artifacts" and repositories
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 3.61.0.02
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
