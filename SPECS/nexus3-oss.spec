@@ -174,6 +174,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 12 2023 Julio González Gil <packages@juliogonzalez.es> - 3.61.0.02-2
+- Fix the macro for the service removal so the package builds again for
+  openSUSE Tumbleweed and Factory
+
 * Wed Oct  4 2023 Julio González Gil <packages@juliogonzalez.es> - 3.61.0.02-1
 - Update to Nexus 3.61.0-02
 - Bugfixing:
