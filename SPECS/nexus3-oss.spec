@@ -175,6 +175,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed Nov  8 2023 Julio González Gil <packages@juliogonzalez.es> - 3.62.0.01-1
+- Update to Nexus 3.62.0-01
 - Bugfixing:
   * NEXUS-40526: Fixed a display issue that was causing tag associations to be
                  missing from on raw components after migration to PostgreSQL.
@@ -213,7 +214,6 @@ rm -rf $RPM_BUILD_ROOT
   * NEXUS-22262: Made changes to address multiple issues that were causing
                  build failures due to failing to return maven-metadata.xml
                  from a group repository
-- Update to Nexus 3.62.0-01
   * New Cleanup Preview Experience for Pro Customers Using PostgreSQL (PRO Only)
     See https://help.sonatype.com/repomanager3/nexus-repository-administration/repository-management/cleanup-policies
   * Azure HA Performance Data (PRO Only)
