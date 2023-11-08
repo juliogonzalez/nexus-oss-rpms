@@ -214,6 +214,7 @@ rm -rf $RPM_BUILD_ROOT
   * NEXUS-22262: Made changes to address multiple issues that were causing
                  build failures due to failing to return maven-metadata.xml
                  from a group repository
+- Improvements:
   * New Cleanup Preview Experience for Pro Customers Using PostgreSQL (PRO Only)
     See https://help.sonatype.com/repomanager3/nexus-repository-administration/repository-management/cleanup-policies
   * Azure HA Performance Data (PRO Only)
