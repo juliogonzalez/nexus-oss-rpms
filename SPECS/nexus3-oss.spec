@@ -22,15 +22,15 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.61.0.02
-Release: 2%{?dist}
+Version: 3.62.0.01
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.61.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.62.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,73 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Nov  8 2023 Julio González Gil <packages@juliogonzalez.es> - 3.62.0.01-1
+- Bugfixing:
+  * NEXUS-40526: Fixed a display issue that was causing tag associations to be
+                 missing from on raw components after migration to PostgreSQL.
+                 Note: this was a display issue only and did not result in any
+                 missing data
+  * NEXUS-40425: Fixed an issue that existed in version 3.61.0 that was
+                 preventing startup when .bak files existed under
+                 restore-from-backup
+  * NEXUS-40423: Resolved an issue in 3.61.0 where duplicate user tokens were
+                 breaking upgrades. Upgrades now succeed and will detect
+                 duplicate rows and produce a log warning
+  * NEXUS-40313: User tokens work as expected with Conan repositories
+  * NEXUS-40196: Created an advanced option for Sonatype Nexus Repository Pro
+                 customers to clean up identical Docker image layers
+                 across repositories.
+                 See https://support.sonatype.com/hc/en-us/articles/22490107929619
+                 for full details
+  * NEXUS-40120: Made changes to reduce the number of queries performed when
+                 running Nuget V2 FindPackagesById in PostgreSQL environments
+  * NEXUS-39411: Resolved a database migrator issue that was causing some
+                 NuGet downloads to fail after migrating to PostgreSQL
+  * NEXUS-39150: Resolved a concurrency issue that was ocurring when running
+                 Staging move and Cleanup unused assets task at the same time
+  * NEXUS-38850: The database migrator --healthcheck option now also checks
+                 the configuration database for corruptions in config classes
+  * NEXUS-38257: Repository configuration changes that occur while a search
+                 reindex task is running cause a lock exception after waiting
+                 for 60 seconds; however, the repository now stays in a
+                 stable state. A subsequent try to save the config change now
+                 works as expected once the long-running task is complete
+  * NEXUS-36836: Running the DeadBlobsFinder groovy script against a large
+                 database no longer causes out of memory errors
+  * NEXUS-32009: The last-modified date for hosted yum repositories now
+                 matches the metadata rebuild date after migrating from
+                 OrientDB to H2
+  * NEXUS-22262: Made changes to address multiple issues that were causing
+                 build failures due to failing to return maven-metadata.xml
+                 from a group repository
+- Update to Nexus 3.62.0-01
+  * New Cleanup Preview Experience for Pro Customers Using PostgreSQL (PRO Only)
+    See https://help.sonatype.com/repomanager3/nexus-repository-administration/repository-management/cleanup-policies
+  * Azure HA Performance Data (PRO Only)
+    See https://help.sonatype.com/repomanager3/product-information/sonatype-nexus-repository-system-requirements/system-requirements-for-high-availability-deployments/sonatype-nexus-repository-high-availability-performance-data-using-azure
+  * Support Zip Improvements:
+    HA deployments will now see a button that allows configuring the support
+    zip options once but generate support zips for all nodes
+    The download link for a node's latest support zip also remains available
+    even if navigating away from and back to the Support Zip page
+  * Expanded Audit Logging:
+    The audit log now includes records for "Clear Cache" and
+    "Change (server) order" LDAP events
+    Added logging for the creation, update or removal of routing rules
+  * Deployment Pattern Library:
+    New library of deployment patterns specifically designed to address three
+    primary concerns: resiliency, scalability, and distribution
+    https://help.sonatype.com/repomanager3/planning-your-implementation/deployment-pattern-library
+  * Notable Dependency Changes:
+    Upgraded Jetty from version 9.4.51.v20230217 to version 9.4.53.v20231009
+    Upgraded goodies from version 2.3.5 to version 2.3.6
+    Upgraded eclipse-sisu from version 0.3.4 to version 0.3.5
+    Upgraded guice from version 5.0.1 to version 6.0.0
+  * High Availability-Clustering (HA-C) is now in extended maintenance and
+    will be officially sunset in April 2024. Full details can are available at
+    https://help.sonatype.com/docs/sonatype-sunsetting-information/sonatype-nexus-repository-3-feature-status
+    and https://help.sonatype.com/docs/sonatype-sunsetting-information
+
 * Thu Oct 12 2023 J. Daniel Schmidt <opensuse@jdsn.de> - 3.61.0.02-2
 - Fix the macro for the service removal so the package builds again for
   openSUSE Tumbleweed and Factory
