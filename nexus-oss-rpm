@@ -44,8 +44,8 @@ function build_rpm() {
 }
 
 get_url_source_from_spec() {
-  local NAME=$(sed -rn 's/Name:\s*(.*)/\1/p' ${1})
-  echo $(sed -rn 's/Source0:\s*(.*)/\1/p' ${1}|sed -e "s/%{name}/${NAME}/g")
+  local NAME=$(sed -rn 's/^Name:\s*(.*)/\1/p' ${1})
+  echo $(sed -rn 's/^Source0:\s*(.*)/\1/p' ${1}|sed -e "s/%{name}/${NAME}/g")
 }
 
 while getopts ":v:h" opts; do

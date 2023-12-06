@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.62.0.01
+Version: 3.63.0.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.62.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.63.0-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,59 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Dec  6 2023 Julio González Gil <packages@juliogonzalez.es> - 3.63.0.01-1
+- Update to Nexus 3.63.0-01
+- Bugfixing:
+  * NEXUS-40623: Adjusted regex to handle requests for NuGet v3 versions with
+                 double hyphens
+  * NEXUS-40621: Sonatype Nexus Repository deployments using PostgreSQL will
+                 appropriately return a 204 response when a user re-deploys a
+                 component with the same tag to hosted repository when
+                 re-deploy is allowed
+  * NEXUS-40491: Resolved an issue where running the "Repair - Reconcile
+                 component database from blob store" task with the integrity
+                 check option enabled did not remove some assets even though
+                 their .properties files did not exist
+  * NEXUS-40421: Resolved an issue with the nexus.azure.server property not
+                 being set properly
+  * NEXUS-40244: The Reconcile component database from blob store task
+                 restores only the expected blobs with the created/updated
+                 times matching the originals
+  * NEXUS-40007: Conditional Get (If-Modified-Since) on Yum group repo
+                 metadata now appropriately returns a 200 response
+                 when expected
+  * NEXUS-39826: You are now able to proxy RubyGems.org escape gem
+  * NEXUS-39675: PyPI package versions published using twine before upgrading
+                 to 3.41.0 or later are now discoverable as expected.
+                 The “Generate Missing SHA256 Checksums” and “Delete Index
+                 Asset MD5 Metadata” tasks now run automatically after upgrade
+  * NEXUS-39567: You are now able to proxy the RubyGems.org abstract gem
+  * NEXUS-39464: Proxying scoped npm packages with an underscore in the name
+                 now works without issue
+  * NEXUS-39227: Proxying PyPI repositories with policy-compliant component
+                 selection enabled is now appropriately incorporated into
+                 etag updates
+  * NEXUS-38587: Searching for Docker images with names containing a "/"
+                 character now works as expected
+  * NEXUS-36415: Resolved an issue that was causing cached proxied NuGet
+                 package metadata that cannot be parsed to prevent content
+                 from being updated from remote
+- Improvements:
+  * Enhancements to HA Helm Chart: Removed version numbers from Kubernetes
+    objects that the Helm chart creates. Now it is possible to add custom
+    labels and selectors. If you have existing volumes and volume mounts,
+    you can also use those rather than having the Helm chart create new ones
+  * Additional Audit Logging:
+    - For SAML, log user login, logout, and config-changed events are
+      now logged
+    - For local authentication, LDAP, and Crowd, user login and logout
+      events are now logged
+  * Filter by Blob Store Name: The Repositories table filter to was enhanced
+    to ensure you can search by blob store name. Simply type the blob store
+    name into the table’s filter box to filter by blob store name
+  * Dependency Upgrades: org.apache.santuario updated from version 2.3.0 to
+    2.3.4 and org.json updated to 20231013
+
 * Wed Nov  8 2023 Julio González Gil <packages@juliogonzalez.es> - 3.62.0.01-1
 - Update to Nexus 3.62.0-01
 - Bugfixing:
