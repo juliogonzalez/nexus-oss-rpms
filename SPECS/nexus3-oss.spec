@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.63.0.01
+Version: 3.64.0.03
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.63.0-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.64.0-03-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,70 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Jan 10 2024 Julio González Gil <packages@juliogonzalez.es> - 3.64.0.03-1
+- Update to Nexus 3.64.0-03
+- Bugfixing:
+  * NEXUS-23410: If previously configured SAML IdP field mapping
+                 values change, Sonatype Nexus Repository will update the
+                 user's profile with the new values as expected
+  * NEXUS-31215: Fixed an issue that was causing some PyPi assets to be
+                 missing from the Browse screen after migrating from OrientDB
+                 to PostgreSQL
+  * NEXUS-32028: Changed the logging level from WARN to DEBUG in the blobstore
+                 class that tracks attributes of an asset being accessed in an
+                 unexpected soft-deleted state. This will prevent spamming the
+                 main nexus.log with messages at a WARN level for operations
+                 considered normal when running the compact blob store task
+  * NEXUS-35207: Fixed an issue that was preventing the GA last-modified date
+                 from being updated in the maven-metadata.xml when deploying a
+                 new GAV in some instances after migrating from Sonatype Nexus
+                 Repository 2 to 3. As part of this fix, the Last Modified
+                 date is no longer visible in the Browse UI view; you can
+                 still tell when the maven-metadata.xml was last updated by
+                 looking at the Blob Updated date in the UI or using the
+                 REST API
+  * NEXUS-35741: Added validation to prevent users from updating an existing
+                 task with an invalid cron_expression
+  * NEXUS-35956: Resolved an issue that was breaking pagination when a given
+                 Docker repository is inside of a group
+  * NEXUS-38856: The NotFoundCache is not populated with paths when a
+                 repository is in an auto-blocked or manually blocked state
+  * NEXUS-39935: There is no longer an error when installing pods
+                 ('OpenSSL-Universal', '1.1.1100') via a Sonatype Nexus
+                 Repository 3 Cocoapods proxy repository
+  * NEXUS-40140, NEXUS-40712: The import and export tasks work as expected on
+                 npm assets without unexpectedly skipping any and while
+                 correctly preserving attributes
+  * NEXUS-40345: Resolved an issue that was preventing certain npm packages
+                 from being proxied from the official registry. This fix
+                 included the following dependency version changes:
+                 + upgraded jackson version from 2.15.0 to 2.15.3
+                 + upgraded snakeyaml version from 2.0 to 2.2
+                 + upgraded swagger version from 1.6.2 to 1.6.11
+  * NEXUS-40495: Increased the browse node sequence limit for H2 and
+                 PostgreSQL implementations so that the database schema will
+                 not run out of sequence values.
+  * NEXUS-40514: Any attempt to change the blob store of an existing
+                 repository via the REST API will be rejected with an HTTP 400
+                 response
+  * NEXUS-40610: Resolved an issue that was preventing some users from
+                 uploading Jruby gems with "-java" in their version names to
+                 hosted ruby repositories
+  * NEXUS-40639: FluentAssets and FluentComponents are now able to retrieve
+                 assets in group repository storage
+  * NEXUS-40771: Using "%3A" or a colon for URL encoded strings in raw
+                 repositories now works as expected
+  * NEXUS-40775: Database Migrator: Made filtering change to reduce load on
+                 the database migrator, improving database migrator performance
+  * NEXUS-40808: Database Migrator: The database migrator now gracefully
+                 handles characters that PostgreSQL does not support
+- Improvements:
+  * Dependency Changes:
+    + logback-classic and logback-core updated to 1.2.13
+    + upgraded jackson version from 2.15.0 to 2.15.3
+    + upgraded snakeyaml version from 2.0 to 2.2
+    + upgraded swagger version from 1.6.2 to 1.6.11
+
 * Wed Dec  6 2023 Julio González Gil <packages@juliogonzalez.es> - 3.63.0.01-1
 - Update to Nexus 3.63.0-01
 - Bugfixing:
