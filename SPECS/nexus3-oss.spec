@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.64.0.03
+Version: 3.65.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.64.0-03-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.65.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,97 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Feb 09 2024 Julio González Gil <packages@juliogonzalez.es> - 3.65.0.02-1
+- Update to Nexus 3.65.0-02
+- Bugfixing:
+  * Many improvements to component search in high availability (HA)
+    environments in this release to make searching and tagging more precise.
+    Due to these changes, the same search query should now return fewer but
+    more precise results
+    Please keep this behavior change in mind when looking at your previously
+    configured search and tagging queries
+    Please also see the HA search differences documentation for full details
+    about how HA search differs from non-HA search:
+    https://help.sonatype.com/en/high-availability-deployment-options.html#search-feature-differences-in-an-ha-environment-161963
+  * NEXUS-34334: If the rebuild index task triggers an ElasticSearchException,
+                 one repository failing will no longer prevent task completion
+                 or affect the other repositories. Added an error message to
+                 alert the user if a repository does fail
+  * NEXUS-34968: Attempting to download an asset with a missing blob from a
+                 proxy repository in a PostgreSQL or H2 deployment no longer
+                 results in an immediate 500 error. Sonatype Nexus Repository
+                 automatically attempts to re-fetch the asset from remote
+                 as expected
+  * NEXUS-36807: Made changes to improve cleanup policy preview performance
+  * NEXUS-39665: Resolved an issue that was preventing some installations of a
+                 package from a group repository with a certain private proxy
+                 repository member
+  * NEXUS-39881: The package-specific index page for a Python package
+                 requested from a proxy repository now displays the
+                 non-truncated package name as expected
+  * NEXUS-40111: Resolved an issue that was causing some Yum assets to be
+                 shown as "components" in the Sonatype Nexus Repository UI
+  * NEXUS-40213: Addressed an issue impacting HA deployments where tokens
+                 after a wildcards in component searches were being dropped
+                 (e.g. for searches like “nexus*core”).
+  * NEXUS-40378: Searching components by exact tag in an HA environment now
+                 returns an exact match as expected
+  * NEXUS-40680: Associating a tag with a component used to operate on a
+                 loose match; it now uses an exact match as expected.
+                 For example, associating a tag with a .jar with the version
+                 "1.0.0" used to associate that tag with all components that
+                 had "1.0.0" in the version number. Now, it will associate
+                 with the exact version match only unless you use a wildcard
+  * NEXUS-40987: Resolved an issue that was causing some PostgreSQL HA
+                 deployments to have excessive errors written to logs despite
+                 requests working as expected
+  * NEXUS-40994: In HA environments, performing an exact-match search for
+                 components where the group ID or artifact ID contain an
+                 underscore now returns exact-match results as expected
+  * NEXUS-41211: Added clarifying documentation regarding changes in NuGet
+                 client compatibility with Sonatype Nexus Repository:
+                 Sonatype Nexus Repository release 3.43.0, added compatibility
+                 with official NuGet v2 clients. The supported subset of the
+                 legacy NuGet v2 protocol is the same as that supported by
+                 Microsoft's NuGet Gallery, http://nuget.org. Use cases that
+                 rely on the deprecated parts of the v2 API are not supported,
+                 including many common Chocolatey use cases and some custom
+                 OData queries
+- Improvements:
+  * Cleanup Policies for Maven and Docker Include Option to Retain
+    Recent Versions (PRO Only)
+    More powerful and flexible cleanup policies for Maven and Docker formats
+    by allowing you to retain a certain number of most recent artifact
+    versions regardless of if they meet other cleanup criteria
+    Learn more about how to use this feature in the cleanup policies
+    help documentation:
+    https://help.sonatype.com/en/cleanup-policies.html
+  * Significant Cleanup Performance Improvements for Pro Deployments Using a
+    PostgreSQL Database (PRO Only)
+    Running the original cleanup feature often takes significant time.
+    This release has changes to significantly improve cleanup performance for
+    those using a PostgreSQL database. The new cleanup feature takes an
+    average time per component of 10.6 ms versus 17.2 ms for the original
+    cleanup feature
+    With this release, all Sonatype Nexus Repository Pro deployments using a
+    PostgreSQL database will use the new cleanup implementation
+    For more information, check the detailed Cleanup Performance Data:
+    https://help.sonatype.com/en/cleanup-performance-data.html
+  * Change Repository Blob Store Task Supports Group Repositories (PRO Only)
+    While the "Admin - Change repository blob store" task originally supported
+    hosted repositories only, Sonatype added support for using this task on
+    proxy repositories last year. Now, Sonatype Nexus Repository Pro
+    deployments on PostgreSQL databases can use this task on group
+    repositories as well.
+    Note that when you use this task on a group repository, it will only move
+    metadata assets directly related to the group repository content id;
+    it does not move or affect data in the repositories that are
+    group members. Using this task on group repositories also requires a
+    PostgreSQL database.
+    Full details are available in the change repository blob store
+    help documentation:
+    https://help.sonatype.com/en/change-repository-blob-store.html
+
 * Wed Jan 10 2024 Julio González Gil <packages@juliogonzalez.es> - 3.64.0.03-1
 - Update to Nexus 3.64.0-03
 - Bugfixing:
