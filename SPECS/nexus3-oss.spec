@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.65.0.02
+Version: 3.66.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.65.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.66.0-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,73 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Mar 08 2024 Julio González Gil <packages@juliogonzalez.es> - 3.66.0.02-1
+- Update to Nexus 3.66.0-02
+- Bugfixing:
+  * NEXUS-41360: Database Migrator: Resolved an issue that was causing some
+                 older versions of the Database Migrator to require very
+                 high heap
+  * NEXUS-41096: Added a new script to the help documentation for those on
+                 PostgreSQL or H2 migrating from LDAP to SAML user tokens
+  * NEXUS-41062: The merged metadata summary on the Browse screen now shows
+                 the correct information for group Maven repositories
+  * NEXUS-41068: Resolved an issue where the support zip download was not
+                 working as expects in HA environments with a
+                 nexus-context-path
+  * NEXUS-41052: The metadata for hosted npm repositories in PostgreSQL
+                 deployments no longer duplicates the "_id" property
+  * NEXUS-40983: NuGet searches with the -PreRelease option now return the
+                 expected results
+  * NEXUS-40900: Fixed an issue with HA nodes upgrading before nodes with
+                 older versions have been shut down. Startup will halt with a
+                 warning until the older nodes have been gracefully shut down
+  * NEXUS-40673: Resolved an issue where a 403 error message was displayed on
+                 the welcome page for anonymous users
+  * NEXUS-40612: Disabling the usage metrics flag will also remove the metric
+                 aggregation task
+  * NEXUS-40377: The custom search page will no longer display uncaught type
+                 errors when adding new criteria
+  * NEXUS-39915: The migration of asset timestamp metadata will now be done as
+                 expected for raw repositories when moving from Nexus
+                 Repository 2 to 3. A fix for Maven and NuGet will be covered
+                 in a future release
+  * NEXUS-39677: The blob store API now returns 404 response codes for
+                 non-existent S3 type blob store names
+  * NEXUS-38842: The export assets task no longer logs WARN messages when
+                 running correctly
+  * NEXUS-35478: The Swagger API UI documentation for repositories will now
+                 show that the "blobStoreName" parameter is mandatory
+  * NEXUS-32494: Database Migrator: The database migrator tool will not run
+                 for incompatible older versions of Nexus Repository while
+                 returning a message to upgrade
+  * NEXUS-31786: Database Migrator: The database migrator tool now includes
+                 more details on assets when logging errors
+  * NEXUS-28593: The InterruptedException will no longer be logged when
+                 recording a successful audit event
+  * NEXUS-26581: Export will no longer report errors when the directory has
+                 not been pre-created
+- Improvements:
+  * Usage Alerts for Deployments Using Embedded Databases (PRO Only)
+    To help customers identify when it is time to evaluate their deployment
+    model, Sonatype Nexus Repository OSS and Pro deployments that use an
+    embedded database (OrientDB or H2) will now see in-product warnings when
+    usage levels approach or exceed certain thresholds
+  * Visual Progress Tracking forRepair - Rebuild repository browseTask
+    When running the "Repair - Rebuild repository browse" task, the Status
+    updates to show users how many assets are completed out of the total
+    number of assets that must be processed. This improvement applies to
+    deployments using PostgreSQL and H2 databases only
+  * User Interface Improvements for Roles
+    User interface is modified to move away from the previous transfer list
+    methodology. Now, administrators will see a single column listing applied
+    privileges and a button to modify the privileges applied to that role.
+    Selecting the button opens a modal where administrators can filter by
+    keyword and select privileges to apply to that role
+  * Dependency changes:
+    + org.jboss.resteasy: resteasy-multipart-provider: 3.15.3.Final upgraded
+      to 3.15.6.Final
+    + AWS SDK dependencies upgraded from from 1.12.299 to 1.12.658
+
 * Fri Feb 09 2024 Julio González Gil <packages@juliogonzalez.es> - 3.65.0.02-1
 - Update to Nexus 3.65.0-02
 - Bugfixing:
