@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.66.0.02
+Version: 3.67.0.03
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.66.0-02-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.67.0-03-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,40 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Apr 07 2024 Julio González Gil <packages@juliogonzalez.es> - 3.67.0.03-1
+- Update to Nexus 3.67.0-03
+- Bugfixing:
+  * NEXUS-41832: Database Migrator: Fixed an issue that was causing some
+                 migrations to a PostgreSQL or H2 database to fail due to
+                 incorrect asset_blob_id values when assets only differed by a
+                 version number in their paths
+  * NEXUS-41312: Resolved an issue that was causing expensive queries from
+                 getComponentCount
+  * NEXUS-41286: Resolved an issue that was causing an internal task to throw
+                 an error when running in some large deployments
+  * NEXUS-41269: Support zips from deployments using PostgreSQL that was
+                 configured using system properties now display information
+                 as expected
+  * NEXUS-41263: Added logging for routing rule blocked requests done via
+                 group repository
+  * NEXUS-40997: Added an error message to the UI that displays when a user
+                 without the correct privileges attempts to save a
+                 content selector
+  * NEXUS-40952: The security/users/<userid>/<realmid>/user-token-reset REST
+                 API will now provide a 400 error if the realm passed
+                 is invalid.
+                 The users REST API can accept the following realm names
+                 associated with user tokens: LdapRealm, Crowd, SamlRealm,
+                 and NexusAuthenticatingRealm.
+  * NEXUS-36989: Selecting the Analyze Application button in component details
+                 now displays the expected form
+- Improvements:
+  * Java 11 Support. Nexus 3.67.0 allows running on top of Java 11, but for
+    now the package will remain using Java 1.8 by default until a future
+    update, probably some time after CentOS7 is end of life
+  * Updated Groovy dependency from 2.4.17 to 3.0.19
+  * Updated PostgreSQL database driver from 42.6.0 to 42.7.2
+
 * Fri Mar 08 2024 Julio González Gil <packages@juliogonzalez.es> - 3.66.0.02-1
 - Update to Nexus 3.66.0-02
 - Bugfixing:
