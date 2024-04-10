@@ -23,7 +23,7 @@ Summary: Sonatype Nexus Repository manages software "artifacts" and repositories
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 3.67.0.03
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
@@ -174,6 +174,35 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 10 2024 Julio González Gil <packages@juliogonzalez.es> - 3.67.0.03-2
+- No code changes, only two important caution notes from Sonatype. I decided
+  to create 3.67.0.03-2 so users already in 3.67.0.03-1 at least can get
+  this warning on the changelogs. Sonatype decided to just remove Nexus
+  3.67.0-03 (tagged as 3.67.0.03-1 for the RPM) from their site.
+- Sonatype is aware of a critical known cleanup policy issue in 3.67.0
+  impacting those who meet the following criteria:
+  * You had previously configured a cleanup policy with the ability to retain
+    select latest versions (feature introduced in 3.65.0)
+  * You recently upgraded to 3.67.0
+  * You then modified a cleanup policy that had previously included the
+    ability to retain select latest versions
+  This issue prevents cleanup policies from honoring the configured ability
+  to retain select latest versions. Running the "Admin - Cleanup repositories
+  using their associated policies" task may soft delete more than intended,
+  which would result in full removal should the "Admin - Compact blob store"
+  task then run.
+  CAUTION: If you meet the above criteria, DO NOT RUN the "Admin - Compact
+   blob store" task
+  CAUTION: If you have upgraded to 3.67.0 and are using cleanup policies
+  with the ability to retain select latest versions, do not modify your
+  cleanup policies
+- Sonatype is aware of a known issue preventing our Docker Subdomain Routing
+  feature from functioning in Sonatype Nexus Repository 3.67.0
+  CAUTION: If you are using Docker Subdomain Routing, do not upgrade
+  to 3.67.0
+  Sonatype announced they will release a fix for this issue as soon
+  as possible
+
 * Sun Apr 07 2024 Julio González Gil <packages@juliogonzalez.es> - 3.67.0.03-1
 - Update to Nexus 3.67.0-03
 - Bugfixing:
