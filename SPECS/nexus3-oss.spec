@@ -22,15 +22,15 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.67.0.03
-Release: 2%{?dist}
+Version: 3.67.1.01
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.67.0-03-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.67.1-01-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,21 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Apr 11 2024 Julio González Gil <packages@juliogonzalez.es> - 3.67.1.01-1
+- Update to Nexus 3.67.1-01
+- Bugfixing:
+  * Critical Bug Fixes: Release 3.67.1 fixes two bugs found in the
+    3.67.0 release: One impacting those who upgraded to 3.67.0 and then
+    modified any previously existing Docker or Maven cleanup policies that
+    were configured to retain select recent versions, and one preventing
+    Docker subdomain routing from functioning
+- Deprecation notice:
+  * The legacy HA-C feature (Upcoming High Availability Clustering (HA-C)
+    Sunset) will be sunset on April 17, 2024. The next release will remove
+    the HA-C functionality in our May release.
+    If you are still using HA-C, you should follow
+    https://help.sonatype.com/en/migrating-to-an-ha-deployment-from-a-legacy-ha-c-or-a-resilient-deployment.html
+
 * Wed Apr 10 2024 Julio González Gil <packages@juliogonzalez.es> - 3.67.0.03-2
 - No code changes, only two important caution notes from Sonatype. I decided
   to create 3.67.0.03-2 so users already in 3.67.0.03-1 at least can get

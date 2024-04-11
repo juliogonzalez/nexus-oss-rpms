@@ -4,7 +4,7 @@ Sonatype retired Nexus 3.67.0-03 (3.67.0.03-1 at this repository) because of two
 
 Read all the details at the [3.67.0 release notes](https://help.sonatype.com/en/sonatype-nexus-repository-3-67-0-release-notes.html) and do not upgrade if you are affected.
 
-If you already updated, follow the instructions on the said release notes, and feel free to update the RPM package to 3.67.0.03-2, as this RPM version only contains the notes in the changelogs.
+Update to 3.67.1-01 or later (3.67.1.01-1 at this repository, or later) as soon as possible.
 
 # Buy me a beer
 
