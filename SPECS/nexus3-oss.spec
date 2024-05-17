@@ -177,13 +177,13 @@ rm -rf $RPM_BUILD_ROOT
 * Fri May 17 2024 Julio González Gil <packages@juliogonzalez.es> - 3.68.1.02-1
 - Update to Nexus 3.68.1-02
 - Bugfixing:
-  * CVE-2024-495: Fix for a critical vulnerability impacting all Sonatype Nexus
-                  Repository 3 deployments. This vulnerability can allow a
-                  specially crafted URL to return any file as a download,
-                  including system files outside of Nexus Repository
-                  application scope.
-                  See https://support.sonatype.com/hc/en-us/articles/29416509323923
-                  for more details
+  * CVE-2024-4956: Fix for a critical vulnerability impacting all Sonatype
+                   Nexus Repository 3 deployments. This vulnerability can
+                   allow a specially crafted URL to return any file as a
+                   download, including system files outside of Nexus
+                   Repository application scope.
+                   See https://support.sonatype.com/hc/en-us/articles/29416509323923
+                   for more details
 
 * Fri May 17 2024 Julio González Gil <packages@juliogonzalez.es> - 3.68.0.04-1
 - Update to Nexus 3.68.0-04
