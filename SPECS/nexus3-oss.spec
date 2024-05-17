@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.67.1.01
+Version: 3.68.1.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.67.1-01-unix.tar.gz
+Source0: http://download.sonatype.com/nexus/3/nexus-3.68.1-02-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,103 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri May 17 2024 Julio González Gil <packages@juliogonzalez.es> - 3.68.1.02-1
+- Update to Nexus 3.68.1-02
+- Bugfixing:
+  * CVE-2024-495: Fix for a critical vulnerability impacting all Sonatype Nexus
+                  Repository 3 deployments. This vulnerability can allow a
+                  specially crafted URL to return any file as a download,
+                  including system files outside of Nexus Repository
+                  application scope.
+                  See https://support.sonatype.com/hc/en-us/articles/29416509323923
+                  for more details
+
+* Fri May 17 2024 Julio González Gil <packages@juliogonzalez.es> - 3.68.0.04-1
+- Update to Nexus 3.68.0-04
+- Bugfixing:
+  * NEXUS-42263: SHA256 checksums are now generated for Helm in
+                 PostgreSQL environments
+  * NEXUS-42006: Resolved an API issue related to policy-compliant component
+                 selection for PyPI where waived components were mistakenly
+                 returned as quarantined
+  * NEXUS-41997: A DEBUG level logger is no longer required to see a
+                 DataAccessException message in the
+                 DatabaseDistributedCooperationRegistry
+  * NEXUS-41903: Made various performance improvements for HA deployments
+  * NEXUS-41602: Resolved improper realm caching for Conan
+  * NEXUS-41486: Components REST API works as expected for group repositories
+                 in PostgreSQL deployments
+  * NEXUS-41451: Users are able to reset their user tokens as expected in
+                 environments using remote user tokens
+  * NEXUS-41442: NuGet "is_latest_version" and "is_absolute_latest_version"
+                 attributes update as expected during staging moves
+  * NEXUS-41403: Database Migrator: Resolved an issue that was causing
+                 excessive DB Migrator logging
+  * NEXUS-41384: Namespace confusion protection works as expected for PyPI and
+                 RubyGems repositories in deployments using a Postgres database
+  * NEXUS-41372: Resolved an issue that was sometimes causing the compact blob
+                 store task to cause an out-of-memory error
+  * NEXUS-41337: Database Migrator: Resolved an issue that was causing database
+                 migration to fail and misreport problem records on ERROR:
+                 insert or update on table "<format>_asset" violates foreign
+                 key constraint "fk_<format>_asset_blob."
+  * NEXUS-41334: Nexus Repository now creates a single task rather than
+                 multiple tasks when migrating Yum metadata into the database
+                 during upgrade
+  * NEXUS-41285: User tokens work on Yum group repositories as expected when
+                 Require User Tokens for Repository Authentication is enabled
+  * NEXUS-40344: Requests for GA-level metadata that needs to be rebuilt no
+                 longer automatically starts a rebuild of the full
+                 metadata tree
+  * NEXUS-39956: Removed "nexus-hazelcast-plugin" from the source tree
+  * NEXUS-39507: Improved error messaging when users attempt to use
+                 Import/Export across different Nexus Repository versions; as
+                 stated in the Import help documentation
+                 (https://help.sonatype.com/en/repository-import.html),
+                 Nexus Repository does not support importing files from an
+                 older Nexus Repository version
+  * NEXUS-38651: Uploading to a raw repository with PUT will generate md5,
+                 sha1, sha256, and sha512 checksums. This is introduced as a
+                 new feature but also recorded in this table for customers who
+                 were following this issue ID
+  * NEXUS-38451: Made adjustments so that Nexus Repository generates fewer
+                 browseComponentAssets SQL queries when finding packages by ID
+                 in NuGet v2 proxy repositories
+  * NEXUS-34192: Resolved an issue with SAML authentication related to
+                 the NXSESSIONID
+  * NEXUS-31745: Improved error messaging on Tag API when invalid continuation
+                 token is passed in
+- Improvements:
+  * Nexus Repository Pro deployments using a PostgreSQL database can now see
+    repository sizes displayed in the repositories listing under
+    "Administration → Repository → Repositories" (PRO Only)
+  * Uploading to Raw Repository with API now also generates SHA256 and
+    SHA512 Checksums
+  * When creating a new role or modifying the applied privileges and roles for
+    an existing role, administrators can now use an asterisk as a wildcard in
+    the search bar
+  * Users and administrators can now see more detailed information about the
+    "Repair - Rebuild repository browse" task’s progress as it runs. The task
+    management table under "Administration → Tasks" now displays the task’s
+    completion percentage to provide more insight into how long the task will
+    take to complete. We will continue to add this functionality in future for
+    additional tasks
+  * Sunsetting of Legacy High Availability Clustering. HA-C is fully removed
+    from Nexus Repository, and additional features or bug fixes related to
+    legacy HA-C will no longer be provided. Sonatype Support will provide
+    best-effort guidance to help PRO customers adopting one of the newer High
+    Availability deployment solutions. Se also help documentation for:
+    + Migrating to an HA deployment from Legacy HA-C
+      https://help.sonatype.com/en/migrating-to-an-ha-deployment-from-a-legacy-ha-c-or-a-resilient-deployment.html
+    + Migrating from legacy HA-C to a single instance deployment
+      https://help.sonatype.com/en/migrating-from-legacy-ha-c-to-a-single-instance.html
+    Nexus Repository will not start for any deployments that use legacy HA-C,
+    ensure you have migrated off of legacy HA-C before upgrading to version
+    3.68.0 or beyond
+    * Dependency Updates in 3.68.0:
+      + Updated axios from 0.21.4 to 0.27.2
+      + Updated jackson2 from 2.15.3 to 2.17.0
+
 * Thu Apr 11 2024 Julio González Gil <packages@juliogonzalez.es> - 3.67.1.01-1
 - Update to Nexus 3.67.1-01
 - Bugfixing:
