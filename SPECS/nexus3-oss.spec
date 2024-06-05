@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.68.1.02
+Version: 3.69.0.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: http://download.sonatype.com/nexus/3/nexus-3.68.1-02-unix.tar.gz
+Source0: https://download.sonatype.com/nexus/3/nexus-3.69.0-02-java8-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,82 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Jun  6 2024 Julio González Gil <packages@juliogonzalez.es> - 3.69.0.02-1
+- Update to Nexus 3.69.0-02
+  * NEXUS-42786: Exporting npm assets with application/x-gzip content type now
+                 works as expected
+  * NEXUS-42560: The YumAbsouteUrlRemover no longer recalculates or updates
+                 checksums for XML files containing the xml:base attribute;
+                 this change greatly improves performance
+  * NEXUS-42434: Adjusted all places in AuditDTO where ObjectMapper was
+                 instantiated to use the injected global mapper. Users should
+                 no longer see errors in the logs when uploading assets
+  * NEXUS-42411: Database Migrator: Reduced log noise by adjusting the
+                 ProcessChunkListener to log migration progress in time
+                 intervals (e.g., showing how many records were migrated each
+                 10 seconds)
+  * NEXUS-42409: Firewall works with Conda format as expected
+  * NEXUS-42276: The System Information page appears as expected with
+                 no NullPointerException
+  * NEXUS-41974: Running the "Cleanup unused asset blobs" task and
+                 "Staging move" in parallel now works as expected
+  * NEXUS-41862: Nexus Repository logs for deployments using PyPI
+                 Policy-Compliant Component Selection now only include
+                 filtered versions
+  * NEXUS-41692: User tokens for Crowd-backed users now use auth caching
+                 as expected
+  * NEXUS-41385: Downloading files through a proxy PyPI repository no longer
+                 leaves files in the blob store’s temporary directory
+  * NEXUS-41374: Nexus Repository no longer logs an ERROR message when a
+                 remote PyPI repository does not have a requested package
+  * NEXUS-41250: The nx-tasks-run privilege details in the Nexus Repository
+                 user interface no longer display an error under the
+                 Actions section
+  * NEXUS-41218: Added a property to nexus.properties that users may configure
+                 in order to reduce overly verbose audit logging for NuGet v2
+                 on  deployments using PostgreSQL. To turn off attributes
+                 logging, add the following to:
+                 nexus.properties: nexus.audit.attribute.changes.enabled=true
+  * NEXUS-41403: Reduced excessive Database Migrator logging
+  * NEXUS-39085: To ensure consistency across the REST API, we updated all
+                 asset ID formats to use only the long ID
+  * NEXUS-37307: The Crowd realm user cache is now used for npm client bearer
+                 token-authenticated requests
+  * NEXUS-36248: As mentioned in the improvements above, we have extended the
+                 users API to allow you to include a realm parameter when
+                 deleting a user
+  * NEXUS-31205: Adjusted support zip algorithms to not truncate any support
+                 zip files other than log files
+  * NEXUS-26828: When a remote Docker repository indicates that something is
+                 “not found,” the proxy repository no longer logs a
+                 WARN message
+  * NEXUS-23052: As mentioned in the improvements above, Administrators can
+                 now delete cached authenticated SAML user records via user
+                 administration section in the Sonatype Nexus Repository
+                 user interface
+  * NEXUS-17740: Created a "Repair - Recalculate blob store storage task" that
+                 can be run if blob store blob count and total size display
+                 incorrect information. This is a slow-running task and should
+                 be used with careful consideration of available
+                 system resources. See the published performance testing
+                 for details:
+                 https://help.sonatype.com/en/recalculate-blob-store-storage-performance-testing.html
+- Improvements
+  * Java 17 Support for Deployments Using H2 or PostgreSQL Databases, but
+    not OrientDB (PRO Only)
+    NOTE: This package is still based in Java 8 for the time being.
+  * Configure User Token Expiration (PRO Only)
+  * SAML Integration Improvements:
+    + You can now optionally specify a user realm source when deleting a user
+      via the Users API
+    + Administrators can also now delete cached authenticated SAML user
+      records via user administration section in the Sonatype Nexus
+      Repository user interface
+    * If a user's IdP field mappings change, Nexus Repository now
+      automatically updates the user’s profile to show the new values
+  * Dependency Updates in 3.69.0:
+    + org.bouncycastle: bcprov-jdk15to18 upgraded from 1.75 to 1.78.1
+
 * Fri May 17 2024 Julio González Gil <packages@juliogonzalez.es> - 3.68.1.02-1
 - Update to Nexus 3.68.1-02
 - Bugfixing:
