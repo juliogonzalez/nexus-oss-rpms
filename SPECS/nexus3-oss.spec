@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.69.0.02
+Version: 3.70.1.02
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: https://download.sonatype.com/nexus/3/nexus-3.69.0-02-java8-unix.tar.gz
+Source0: https://download.sonatype.com/nexus/3/nexus-3.70.1-02-java8-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,6 +174,62 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Aug 28 2024 Julio González Gil <packages@juliogonzalez.es> - 3.70.1.02-1
+- Fix for UI issues with custom context path in Nexus Repository 3.70.0
+  This issue only impacted the UI and did not impact other functionality such
+  as for example requests for components.
+
+* Thu Jul 11 2024 Julio González Gil <packages@juliogonzalez.es> - 3.70.0.03-1
+- Update to Nexus 3.70.0-03
+- WARNINGS:
+  * 3.70.0 is the final version supporting OrientDB, Java 8, and Java 11.
+    3.71.0+ will require either an H2 or PostgreSQL database and Java 17.
+    This means that this is the latest release that will build for CentOS7
+    or any other clones from third party providers.
+  * 3.70.0 upgrades the embedded H2 database to version 2.2.244. As there are
+    considerable changes between version 1.4.200 and 2.2.244, those using an
+    H2 database will need to take some additional steps to upgrade to Nexus
+    Repository 3.70.0
+    3.69.0, added an "Admin - Export SQL database to script task" you can
+    use to create a SQL script export of your H2 database.
+    If you are using an H2 database, you will need to run this task and follow
+    the instructions at https://help.sonatype.com/en/upgrade-h2.html
+    instructions in order to upgrade to release 3.70.0.
+    This means that you must upgrade to version 3.69.0 before upgrading
+    to 3.70.0+
+    If you are unsure what database your deployment is using, follow the help
+    documentation for determining your current database:
+    https://help.sonatype.com/en/migrating-to-a-new-database.html#determining-current-database-162010
+- Bugfixing:
+  * NEXUS-43307: Updated documentation to accurately state that access to
+                 SAML UI and API requires nx-all privileges
+  * NEXUS-42854: The npm view command works as expected for scoped packages
+  * NEXUS-42336: Database records that cause exceptions during database
+                 migration are appropriately logged
+  * NEXUS-39818: Running npm audit should no longer result in
+                 unexpected exceptions
+  * NEXUS-39799: In Yum repositories, all pathnames in the filelist.xml.gz
+                 file are properly escaped
+  * NEXUS-39462: If an asset’s format is incorrect, the Database Migrator
+                 will continue with migration and skip corrupted records
+  * NEXUS-22888: Added componentId validation when trying to view an asset
+                 that does not have a component. If the componentId is an
+                 empty string, string of blank spaces, null, or undefined,
+                 then the LifeCycle Component panel is not displayed
+- Improvements:
+  * Create and Manage Cleanup Policies via New REST API (PRO Only)
+    https://help.sonatype.com/en/cleanup-policies-api.html
+  * Create and Manage Tasks via API (PRO Only)
+    https://help.sonatype.com/en/tasks-api.html
+  * Retrieve and Set IQ Audit and Quarantine Statuses via API (PRO Only)
+    https://help.sonatype.com/en/lifecycle-api.html
+  * New Database Migrator Flow to improve performance and reliability.
+    Check https://help.sonatype.com/en/migrating-to-a-new-database.html for
+    the new steps for migrating your database
+    If you need to use an older version of the Database Migrator, you can
+    still read the legacy database migrator documentation at
+    https://help.sonatype.com/en/legacy-database-migration.html
+
 * Thu Jun  6 2024 Julio González Gil <packages@juliogonzalez.es> - 3.69.0.02-1
 - Update to Nexus 3.69.0-02
   * NEXUS-42786: Exporting npm assets with application/x-gzip content type now
