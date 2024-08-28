@@ -158,7 +158,8 @@ case "${DISTRO}" in
 esac
 
 if [ "${CENGINE}" == "podman" ]; then
-  PRIVILEGED="${PRIVILEGED} --userns=keep-id"
+  # --security-opt label=disable due to https://github.com/containers/podman/issues/3683
+  PRIVILEGED="${PRIVILEGED} --userns=keep-id --security-opt label=disable"
 else
   PRIVILEGED='--privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
 fi
