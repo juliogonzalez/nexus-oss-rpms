@@ -22,7 +22,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.70.1.02
+Version: 3.70.2.01
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -30,7 +30,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: https://download.sonatype.com/nexus/3/nexus-3.70.1-02-java8-unix.tar.gz
+Source0: https://download.sonatype.com/nexus/3/nexus-3.70.2-01-java8-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -174,7 +174,18 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Sep  6 2024 Julio González Gil <packages@juliogonzalez.es> - 3.70.2.01-1
+- Update to 3.70.2-01
+- Fix for a Database Migrator issue that caused some users to see duplicate
+  key errors after migrating from OrientDB to H2
+- WARNINGS:
+  * 3.70.2 is the final version supporting OrientDB, Java 8, and Java 11.
+    3.71.0+ will require either an H2 or PostgreSQL database and Java 17.
+    This means that this is the latest release that will build for CentOS7
+    or any other clones from third party providers.
+
 * Wed Aug 28 2024 Julio González Gil <packages@juliogonzalez.es> - 3.70.1.02-1
+- Update to 3.70.1-02
 - Fix for UI issues with custom context path in Nexus Repository 3.70.0
   This issue only impacted the UI and did not impact other functionality such
   as for example requests for components.
