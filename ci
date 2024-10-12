@@ -6,7 +6,7 @@ LANG=en_EN
 SCRIPT=$(basename ${0})
 
 # Supported distributions
-SUPPORTEDDISTROS='centos7 amazon2018.03 amazonlinux2 opensuse15.5'
+SUPPORTEDDISTROS='almalinux8 amazonlinux2 opensuse15.6'
 
 # Supported Sonatype Nexus Repository major versions
 NEXUSMAJORVERS='2 3'
@@ -136,23 +136,20 @@ done
 # Check nexus major version
 case "${NEXUSMAJORVER}" in
   2) PACKAGE_NAME='nexus'
-     NEXUS_URL='http://localhost:8081/nexus/' ;;
+     NEXUS_URL='http://localhost:8081/nexus/'
+     JAVA="1.8";;
   3) PACKAGE_NAME='nexus3'
-     NEXUS_URL='http://localhost:8081/' ;;
+     NEXUS_URL='http://localhost:8081/'
+     JAVA="17";;
   *) print_error_unsupported_nexus_major_ver
      exit 1;;
 esac
 
 # Check distribution
 case "${DISTRO}" in
-  centos7)       IMAGE="${REGISTRY}/${NAMESPACE}/centos7-nexus:latest"
-                 START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
-  amazon2018.03) IMAGE="${REGISTRY}/${NAMESPACE}/amazon2018.03-nexus:latest"
-                 START_CMD="/etc/init.d/${PACKAGE_NAME} start";;
-  amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/amazonlinux2-nexus:latest"
-                 START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
-  opensuse15.5)  IMAGE="${REGISTRY}/${NAMESPACE}/opensuse15.5-nexus:latest"
-                 START_CMD="/usr/bin/systemctl start ${PACKAGE_NAME}";;
+  amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/almalinux8-nexus:latest"
+  amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/amazonlinux2-nexus:latest";;
+  opensuse15.6)  IMAGE="${REGISTRY}/${NAMESPACE}/opensuse15.6-nexus:latest";;
   *)             print_error_unsupported_distro
                  exit 1;;
 esac
@@ -175,12 +172,14 @@ print_info "Starting container ${CONTAINER_NAME}..."
 ${CENGINE}  container run -i ${TTY} ${REMOVE_ON_ERROR} --name "${CONTAINER_NAME}" ${PRIVILEGED} -v ${PWD}:/tmp/nexus-oss-rpms -w /tmp/nexus-oss-rpms -d ${IMAGE}
 print_info "Cleaning up"
 container_run "${CONTAINER_NAME}" "./clean"
+print_info "Use the right Java version (${JAVA} for Nexus ${NEXUSMAJORVER}..."
+container_run "${CONTAINER_NAME}" "update-alternatives --set java $(update-alternatives --display java|grep '^/'|cut -d ' ' -f1|grep ${JAVA})"
 print_info "Building nexus-oss package..."
 container_run "${CONTAINER_NAME}" "./nexus-oss-rpm -v ${NEXUSMAJORVER}" "ci"
 print_info "Installing nexus-oss package..."
 container_run "${CONTAINER_NAME}" "/bin/rpm -i RPMS/$HOSTTYPE/${PACKAGE_NAME}-*.*.$HOSTTYPE.rpm"
 print_info "Starting nexus..."
-container_run "${CONTAINER_NAME}" "${START_CMD}"
+container_run "${CONTAINER_NAME}" "/usr/bin/systemctl start ${PACKAGE_NAME}"
 print_info "Checking application (${MAXRETRIES} retries, ${TIME_WAIT} seconds between retries)..."
 RETRIES=0
 while [ ${RETRIES} -lt ${MAXRETRIES} ]; do

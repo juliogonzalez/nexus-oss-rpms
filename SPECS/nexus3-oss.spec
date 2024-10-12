@@ -1,43 +1,35 @@
 %define __os_install_post %{nil}
 
-%if 0%{?suse_version}
-%define chkconfig_cmd /usr/bin/chkconfig
-%define java_package java-1_8_0-openjdk
+%if 0%{?amzn}
+%define java_package java-17-amazon-corretto
 %else
-%define chkconfig_cmd /sbin/chkconfig
-%define java_package java-1.8.0-openjdk
+%define java_package java-17-openjdk
 %endif
 
-# Use systemd for SUSE >= 12 SP1 openSUSE >= 42.1, openSUSE Tumbleweed/Factory, fedora >= 18, rhel >=7 and Amazon Linux >= 2
-%if (!0%{?is_opensuse} && 0%{?suse_version} >=1210) || (0%{?is_opensuse} && 0%{?sle_version} >= 120100) || 0%{?suse_version} > 1500
+%if (0%{?is_opensuse} || 0%{?suse_version})
 %define suse_systemd 1
 %endif
-%if (0%{?fedora} && 0%{?fedora} >= 18) || (0%{?rhel} && 0%{?rhel} >= 7) || 0%{?amzn} >= 2
+%if (0%{?rhel})
 %define redhat_systemd 1
-%endif
-%if 0%{?suse_systemd} || 0%{?redhat_systemd}
-%define use_systemd 1
 %endif
 
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
 Version: 3.70.2.01
-Release: 1%{?dist}
+Release: 2%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: https://download.sonatype.com/nexus/3/nexus-3.70.2-01-java8-unix.tar.gz
+Source0: https://download.sonatype.com/nexus/3/nexus-3.70.2-01-java17-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
 Requires: %{java_package}
-%if 0%{?use_systemd}
 Requires: systemd
-%endif
 AutoReqProv: no
 
 %description
@@ -62,14 +54,9 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/%{name}
 mv * .install4j $RPM_BUILD_ROOT/usr/share/%{name}
 rm -rf $RPM_BUILD_ROOT/usr/share/%{name}/data
 
-%if 0%{?use_systemd}
 %{__mkdir} -p %{buildroot}%{_unitdir}
 %{__install} -m644 %{SOURCE1} \
     %{buildroot}%{_unitdir}/%{name}.service
-%else
-mkdir -p $RPM_BUILD_ROOT/etc/init.d/
-ln -sf /usr/share/%{name}/bin/nexus $RPM_BUILD_ROOT/etc/init.d/%{name}
-%endif
 
 mkdir -p $RPM_BUILD_ROOT/etc/
 ln -sf /usr/share/%{name}/etc $RPM_BUILD_ROOT/etc/%{name}
@@ -120,19 +107,11 @@ if [ $1 -eq 1 ]; then
 fi
 
 %preun
-%if 0%{?use_systemd}
 %if 0%{?suse_systemd}
 %service_del_preun %{name}.service
 %endif
 %if 0%{?redhat_systemd}
 %systemd_preun %{name}.service
-%endif
-%else
-# Package removal, not upgrade
-if [ $1 = 0 ]; then
-    /sbin/service %{name} stop > /dev/null 2>&1
-    %{chkconfig_cmd} --del %{name}
-fi
 %endif
 
 %postun
@@ -140,11 +119,7 @@ fi
 %systemd_postun %{name}.service
 %endif
 %if 0%{?suse_systemd}
-%if 0%{?suse_version} > 1500
 %service_del_postun_without_restart %{name}.service
-%else
-%service_del_postun -n %{name}.service
-%endif
 %endif
 
 %clean
@@ -167,13 +142,14 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/%{name}/replicator/
 %attr(-,%{name},%{name}) /var/lib/%{name}
 %attr(-,%{name},%{name}) /var/log/%{name}
-%if 0%{?use_systemd}
 %{_unitdir}/%{name}.service
-%else
-/etc/init.d/%{name}
-%endif
 
 %changelog
+* Sun Oct 13 2024 Julio González Gil <packages@juliogonzalez.es> - 3.70.2.01-1
+- Adapt to Java 17
+- Remove support for OS without Java 17 packages
+- Remove support for sysvinit-only OS
+
 * Fri Sep  6 2024 Julio González Gil <packages@juliogonzalez.es> - 3.70.2.01-1
 - Update to 3.70.2-01
 - Fix for a Database Migrator issue that caused some users to see duplicate
