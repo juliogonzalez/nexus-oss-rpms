@@ -2,10 +2,12 @@
 
 Current distributions available:
 
-* CentoS 7
-* Amazon Linux 2018.03
+* CentoS 7 (EoL)
+* Amazon Linux 2018.03 (EoL)
+* AlmaLinux 8
 * Amazon Linux 2
 * openSUSE Leap 15.5
+* openSUSE Leap 15.6
 
 # Building images
 
@@ -13,14 +15,6 @@ Run:
 
 ```
 ./manage_images -h
-```
-
-# Running the images
-
-To run, for example, the CentOS7 image:
-
-```
-docker run -t --name test juliogonzalez/centos7-nexusdev
 ```
 
 # docker-systemctl-replacement
