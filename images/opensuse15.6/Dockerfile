@@ -1,4 +1,4 @@
-FROM docker.io/opensuse/leap:15.5
+FROM docker.io/opensuse/leap:15.6
 MAINTAINER Julio Gonzalez Gil <git@juliogonzalez.es>
 
 USER root
