@@ -147,7 +147,7 @@ esac
 
 # Check distribution
 case "${DISTRO}" in
-  amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/almalinux8-nexus:latest"
+  amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/almalinux8-nexus:latest";;
   amazonlinux2)  IMAGE="${REGISTRY}/${NAMESPACE}/amazonlinux2-nexus:latest";;
   opensuse15.6)  IMAGE="${REGISTRY}/${NAMESPACE}/opensuse15.6-nexus:latest";;
   *)             print_error_unsupported_distro
