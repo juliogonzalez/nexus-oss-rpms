@@ -21,6 +21,7 @@ RUN rpm -qa --qf "%{NAME}\n" > /opt/packages-image.txt && \
     yum -y -q update && \
     yum -y -q install \
      java-1.8.0-openjdk \
+     java-17-amazon-corretto \
      procps-ng \
      systemd-sysv \
      rpm-build && \
