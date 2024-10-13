@@ -37,7 +37,6 @@ The SPEC is [verified to build](https://build.opensuse.org/project/show/home:jul
 - SLE15 (supported SPs) x86_64
 - openSUSE Leap 15.X (supported versions) x86_64
 - openSUSE Tumbleweed x86_64 
-- CentOS7 x86_64
 - AlmaLinux 8-9 x86_64
 - RHEL7-8 x86_64
 - Fedora (supported versions) x86_64
@@ -48,7 +47,6 @@ The following distributions are not tested but building and installing should wo
 - Amazon Linux 2
 
 Besides, Sonatype Nexus Repository 2/3 installations done by the RPMs are [verified to work](#build-status) fine at:
-- CentOS7 x86_64
-- Amazon Linux 2018.03 x86_64
+- AlmaLinux 8 x86_64
 - Amazon Linux 2 x86_64
-- openSUSE Leap 15.5 x86_64
+- openSUSE Leap 15.6 x86_64
