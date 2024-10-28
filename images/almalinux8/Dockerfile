@@ -23,6 +23,7 @@ RUN rpm -qa --qf "%{NAME}\n" > /opt/packages-image.txt && \
      java-1.8.0-openjdk \ 
      java-17-openjdk \
      procps-ng \
+     python2 \
      systemd-sysv \
      rpm-build && \
     cp /opt/systemctl.py /usr/bin/systemctl && \
