@@ -25,6 +25,7 @@ RUN rpm -qa --qf "%{NAME}\n" > /opt/packages-image.txt && \
      java-1_8_0-openjdk \
      java-17-openjdk \
      python3 \
+     procps \
      rpm-build \
      systemd-sysvinit && \
     cp /opt/systemctl3.py /usr/bin/systemctl && \
