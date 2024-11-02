@@ -1,10 +1,10 @@
 # CAUTION
 
-Sonatype retired Nexus 3.67.0-03 (3.67.0.03-1 at this repository) because of two important failures.
+Nexus 3.71.0-06 and newer will not support neither Java 1.8 or OrientDB (which used to be the default database).
 
-Read all the details at the [3.67.0 release notes](https://help.sonatype.com/en/sonatype-nexus-repository-3-67-0-release-notes.html) and do not upgrade if you are affected.
+The migration to Java 17 is performed automatically by the package, if the OS provides it (so for example CentOS7 and clones will not be supported anymore)
 
-Update to 3.67.1-01 or later (3.67.1.01-1 at this repository, or later) as soon as possible.
+However the migration to H2/PostgreSQL needs to be performed MANUALLY. If you are still using OrientDB (you did not perform a migration), Make sure you read the [Sonatype Nexus Database Migration documentation](https://help.sonatype.com/en/migrating-to-a-new-database.html) and run the procedure before updating to Nexus 3.71.0-06 or any newer version!
 
 # Buy me a beer
 
