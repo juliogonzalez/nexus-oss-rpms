@@ -140,7 +140,7 @@ case "${NEXUSMAJORVER}" in
      JAVA="1.8";;
   3) PACKAGE_NAME='nexus3'
      NEXUS_URL='http://localhost:8081/'
-     JAVA="17";;
+     JAVA="1.8";;
   *) print_error_unsupported_nexus_major_ver
      exit 1;;
 esac
