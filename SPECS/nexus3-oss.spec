@@ -16,7 +16,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.71.0.06
+Version: 3.72.0.04
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -24,7 +24,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: https://download.sonatype.com/nexus/3/nexus-3.71.0-06-unix.tar.gz
+Source0: https://download.sonatype.com/nexus/3/nexus-3.72.0-04-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -145,6 +145,55 @@ rm -rf $RPM_BUILD_ROOT
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sat Nov 16 2024 Julio González Gil <packages@juliogonzalez.es> - 3.72.0.04-1
+- Update to 3.72.0-04
+- Bugfixes:
+  * NEXUS-43651: Sending NuGet v2 requests to a Nexus NuGet v3 proxy
+                 repository results in a 404 instead of a 200 response
+  * NEXUS-43634: The Import task fails gracefully if a user attempts to import
+                 a repository without specifying the drive letter
+  * NEXUS-43608: Requests for version-specific scoped npm metadata return the
+                 expected metadata. All Nexus Repository instances must be
+                 updated to at least 3.72.0 to benefit from this fix and avoid
+                 polluting downstream metadata
+  * NEXUS-43602: Resolved an issue that was preventing some customers from
+                 properly loading the Capabilities user interface
+  * NEXUS-43562: Increased nexus.assetBlobCleanupTask.batchSize default value
+                 from 100 to 1,000 to improve AssetBlobCleanupTask performance
+  * NEXUS-43506: Updated cyclonedx-core-java version to version 9.0.4
+  * NEXUS-43504: Created a new Search Configuration Capability to allow
+                 administrators to configure a prefetch limit controlling the
+                 number of times Nexus can return to the database to populate
+                 a given page
+  * NEXUS-43484: An enabled Default Role Realm remains enabled in an HA
+                 cluster even if an HA node shuts down
+  * NEXUS-43463: Attempting to import to an S3-backed repository with the hard
+                 link option enabled now gracefully fails with improved
+                 error messaging. Note that you cannot use hard links with
+                 object storage blob stores like S3
+  * NEXUS-43211: Resolved an issue that prevented some deployments from
+                 starting after migrating from OrientDB to PostgreSQL due to a
+                 'repeatable migration "NpmPCCSAndFirewallAuditCapabilityOutOfSyncMigrationStep" failed'
+                 error
+  * NEXUS-43007: Attempting an IQ server login with invalid credentials no
+                 longer causes repeated error messages in the logs
+  * NEXUS-42500: Azure blob store metrics migrate successfully during
+                 HA migration
+  * NEXUS-40641: Download links update as expected after generating a new
+                 support zip while a previous one already exists
+  * NEXUS-36285: When creating an LDAP external role mapping, Nexus Repository
+                 does not query the LDAP server until the user has entered at
+                 least three characters and stopped typing
+- Improvements:
+  * Upgrade to 3.72.0 with Zero Downtime (PRO High Availability
+    Deployments Only)
+  * View Published and Last Downloaded Date in Cleanup Preview
+    CSV (PostgreSQL Only)
+  * New Configurable Database Refetch Limit for Search in High
+    Availability Deployments
+  * Starting December 2024 deployments using PostgreSQL database will require
+    at least PostgreSQL 14
+
 * Fri Nov 15 2024 Julio González Gil <packages@juliogonzalez.es> - 3.71.0.06-1
 - Update to 3.71.0-06
 - WARNINGS:
