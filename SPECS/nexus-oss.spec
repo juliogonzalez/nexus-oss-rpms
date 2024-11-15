@@ -22,15 +22,15 @@
 Summary: Nexus manages software "artifacts" and repositories for them
 Name: nexus
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 2.15.1.02
-Release: 3%{?dist}
+Version: 2.15.2.03
+Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
 %define nversion %(echo %{version}|sed -r 's/(.*)\\./\\1-/')
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: https://download.sonatype.com/%{name}/oss/%{name}-2.15.1-02-bundle.tar.gz
+Source0: https://download.sonatype.com/%{name}/oss/%{name}-2.15.2-03-bundle.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -169,6 +169,28 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Nov 15 2024 Julio González Gil <packages@juliogonzalez.es> - 2.15.2-03-1
+- Update to 2.15.2-03
+- WARNING: Sonatype will officially sunset its Nexus Repository 2 product on
+           June 30, 2025. Consider migrating to Nexus Repository 3 as soon as
+           possible:
+           https://help.sonatype.com/en/upgrading-from-nexus-repository-manager-2.html
+           Find more information at the Sonatype Nexus Repository 2 Sunsetting
+           Information help page:
+           https://download.sonatype.com/nexus/2/Sonatype%20Nexus%20Repository%202%20Help.pdf
+- Bugfixes:
+  * CVE-2024-5082: Fixed a Remote Code Execution vulnerability through which
+                   an attacker with privileges to publish content could upload
+                   a specially crafted file that would result in Nexus
+                   Repository attempting to execute embedded commands
+                   upon retrieval
+  * CVE-2024-5083: Fixed a Stored XSS vulnerability through which an attacker
+                   with privileges to publish content could upload a specially
+                   crafted file that includes embedded JavaScript. If that
+                   file is viewed by an authenticated user, the JavaScript
+                   could execute product features available to the
+                   authenticated user
+
 * Thu Oct 12 2023 Julio González Gil <packages@juliogonzalez.es> - 2.15.1-02-3
 - Fix the macro for the service removal so the package builds again for
   openSUSE Tumbleweed and Factory
