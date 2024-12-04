@@ -16,7 +16,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.72.0.04
+Version: 3.73.0.12
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -24,7 +24,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: https://download.sonatype.com/nexus/3/nexus-3.72.0-04-unix.tar.gz
+Source0: https://download.sonatype.com/nexus/3/nexus-3.73.0-12-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -145,6 +145,79 @@ rm -rf $RPM_BUILD_ROOT
 %{_unitdir}/%{name}.service
 
 %changelog
+* Wed Dec  4 2024 Julio González Gil <packages@juliogonzalez.es> - 3.73.0.12-1
+- Update to 3.73.0-12
+- Bugfixes:
+  * NEXUS-44488: You can no longer enable user tokens via capabilities and
+                 must use the user token UI or API
+  * NEXUS-44370: Switched order of staging delete and move operations to avoid
+                 a concurrency issue when running staging move and cleanup
+                 unused asset tasks at the same time
+  * NEXUS-44350: The database migrator utility correctly migrates the
+                 'soft_deleted_blobs' table from H2 to PostgreSQL and
+                 PostgreSQL to H2
+  * NEXUS-44337: Resolved an issue that was preventing the option to retain a
+                 select number of previous versions when running cleanup from
+                 working as expected
+  * NEXUS-44017: The jmx.json is now included in support zips
+  * NEXUS-44005: Cleanup preview works as expected in H2 environments without
+                 an unexpected UI timeout
+  * NEXUS-43977: Changed 'com.sonatype.nexus.repository.nuget.internal.v3.NugetProxySearchHandler'
+                 log level to from WARN to DEBUG
+  * NEXUS-43780: Updated Helm chart with examples of how to configure the
+                 environment variable and key file for the secret
+                 encryption keys
+  * NEXUS-43764: After migrating from OrientDB to PostgreSQL, the browse
+                 rebuild task only runs once
+  * NEXUS-43758: After migrating to a PostgreSQL database, the search rebuild
+                 index task only runs once
+  * NEXUS-43587: Anonymous users are not able to browse after pulling a Docker
+                 image unless they log in
+  * NEXUS-43648: Special characters encode as expected for raw
+                 proxy repositories
+  * NEXUS-43413: The Maven rebuild metadata task provides meaningful error
+                 messaging when it encounters invalid versions
+  * NEXUS-43253: Made adjustments to improve 'getByDisplayPath'
+                 query performance. This includes creating a new index on
+                 'parent_id' that runs on startup. The new index may slow
+                 startup time but will allow the retrieval of data based on
+                 'node_ids' and 'parent_ids' in a very efficient way
+  * NEXUS-43022: Grouping multiple proxy PyPi repositories works as expected
+  * NEXUS-42751: Logs exceeding the 30MB file size limit are truncated with a
+                 truncated marker/
+  * NEXUS-42704: Nexus Repository cleans up yaml metadata as new metadata
+                 is generated
+  * NEXUS-42207: There are no longer UI errors when IQ is configured with
+                 Firewall audit and quarantine disabled
+  * NEXUS-37772: Yum metadata updates as expected after a cleanup policy
+                 removes rpms
+  * NEXUS-21389: Removed inaccurate information about the maximum number of
+                 users that the users REST API will return
+- Improvements:
+  * Added a new index on "parent_id" that runs on startup, to improve
+    "getByDisplayPath" query performance. The new index may slow startup time
+    for large deployments but will allow the retrieval of data based on
+    "node_id" and "parent_id" in a very efficient way
+  * Sonatype Nexus Repository 3.73.0 introduces a re-encryption feature to
+    mitigate CVE-2024-5764. This feature allows administrators to change the
+    encryption key used to protect passwords and other
+    confidential information.
+    If you have not configured and run re-encryption and are still using the
+    default key, you will see a health check warning with the message
+    "Nexus was not configured with an encryption key and is using the Default key"
+    after upgrading to 3.73.0+. Follow the steps in the re-encryption help
+    documentation to resolve the warning:
+    https://help.sonatype.com/en/re-encryption-in-nexus-repository.html
+  * Support for Rust / Cargo Format (PRO Only)
+  * Malware Warning Banner: When Sonatype Nexus Repository identifies malware
+    components, a warning banner alerts both administrators and users in the
+    Nexus Repository interface. This banner updates every 24 hours to reflect
+    the latest malware detection status
+- Dependency Changes:
+  * Upgrade pax-url-aether from 2.6.7 to 2.6.12
+  * Upgrade protobuf-java from 3.25.3 to 3.25.5
+  * Upgraded keycloak-saml-* and keycloak-admin-client from 12.0.3 to 18.0.2
+
 * Sat Nov 16 2024 Julio González Gil <packages@juliogonzalez.es> - 3.72.0.04-1
 - Update to 3.72.0-04
 - Bugfixes:
