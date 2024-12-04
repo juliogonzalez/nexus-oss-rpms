@@ -16,7 +16,7 @@
 Summary: Sonatype Nexus Repository manages software "artifacts" and repositories for them
 Name: nexus3
 # Remember to adjust the version at Source0 as well. This is required for Open Build Service download_files service
-Version: 3.73.0.12
+Version: 3.74.0.05
 Release: 1%{?dist}
 # This is a hack, since Nexus versions are N.N.N-NN, we cannot use hyphen inside Version tag
 # and we need to adapt to Fedora/SUSE guidelines
@@ -24,7 +24,7 @@ Release: 1%{?dist}
 License: EPL-2.0
 Group: Development/Tools/Other
 URL: http://nexus.sonatype.org/
-Source0: https://download.sonatype.com/nexus/3/nexus-3.73.0-12-unix.tar.gz
+Source0: https://download.sonatype.com/nexus/3/nexus-3.74.0-05-unix.tar.gz
 Source1: %{name}.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires(pre): /usr/sbin/useradd, /usr/bin/getent
@@ -145,6 +145,59 @@ rm -rf $RPM_BUILD_ROOT
 %{_unitdir}/%{name}.service
 
 %changelog
+* Thu Dec  5 2024 ulio González Gil <packages@juliogonzalez.es> - 3.74.0.05-1
+- Update to 3.74.0-05
+- Bugfixes:
+  * NEXUS-44569: The SecretsMigrationTask no longer fails if a value was not
+                 encrypted previously. If not able to decrypt the old value,
+                 the raw value can be used
+  * NEXUS-44433: When searching via API or UI and filtering the version using
+                 a wild card like “1.1.2.*,” Nexus Repository respects the third
+                 digit in the filter and returns the limited data set expected
+  * NEXUS-44175: Requests for version-specific npm package metadata return the
+                 correct download URL
+  * NEXUS-44088: Resolved an issue that was causing an illegal argument
+                 exception when requesting Nuget v3 index.json in some
+                 limited cases
+  * NEXUS-43696: Added a new H2 database migration step so that the user is
+                 warned if they are not in the db folder that they must move
+                 the created H2 database to the db folder before
+                 starting nexus
+  * NEXUS-43518: If you set the "--logging.level.com.sonatype=TRACE" flag for
+                 the database migrator, it will now log the parameters being
+                 passed to SQL when there is a failure so that you can tell
+                 which asset/component is causing the issue
+  * NEXUS-41085: Updated Policy-Compliant Component Selection a for npm "next"
+                 tag so that when filtering versions in component metadata,
+                 the next attribute is correctly updated and does not contain
+                 versions that no longer exist in the filtered metadata
+  * NEXUS-39585: You can now use custom S3 regions when creating a blob store.
+                 See the Custom S3 Region release note for details:
+                 https://help.sonatype.com/en/sonatype-nexus-repository-3-74-0-release-notes.html#custom-region-lists-for-aws-blob-stores
+  * NEXUS-21078: When using the Nexus /assets or /components API to get lists
+                 of assets and components, the result set is no longer limited
+                 to 10 items per page. We have increased the limit to 100
+                 items per page
+- Improvements:
+  * Google Cloud Platform Support for Highly Available or Resilient Nexus
+    Repository Deployments using Google Kubernetes Engine (GKE) (PRO Only)
+    https://help.sonatype.com/en/resilient-nexus-repository-deployment-to-google-cloud.html
+    https://help.sonatype.com/en/deploy-nexus-repository-to-google-cloud.html
+  * Support for Google Cloud Blob Storage (PRO Only)
+    https://help.sonatype.com/en/configuring-blob-stores.html
+  * Automatic License Distribution for High Availability
+    Deployments (PRO Only)
+    https://help.sonatype.com/en/installing-and-updating-licenses.html
+  * Custom Region Lists for AWS Blob Stores
+    https://help.sonatype.com/en/configuring-blob-stores.html
+  * AWS S3 Replication Buckets for Failover Support (PRO Only)
+    https://help.sonatype.com/en/configuring-blob-stores.html
+  * Support for External Secrets Operator for Highly Available Nexus
+    Repository Deployments (PRO Only)
+    https://help.sonatype.com/en/migrate-to-use-external-secrets-operator.html
+  * Improved Search for Conan Format
+    https://help.sonatype.com/en/searching-for-components.html#conan-repositories-162158
+
 * Wed Dec  4 2024 Julio González Gil <packages@juliogonzalez.es> - 3.73.0.12-1
 - Update to 3.73.0-12
 - Bugfixes:
